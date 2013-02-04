@@ -54,9 +54,8 @@ Apps.actualTime = 0
 ------------------------
 --  Apps functions
 function Apps:load()
-    -- temp generic code :
-    -- Apps.state = CMainMenu:create()
-    -- Apps.state:load()
+    Apps.state = CMainMenu:create()
+    Apps.state:load()
 end
 
 function Apps:keypressed(key)
@@ -109,7 +108,7 @@ function Apps:mousereleased(x, y, button)
 end
 
 function Apps:draw()
-    -- states
+    -- 2 lvled stateness
     if self.state then self.state:draw() end
     if self.state and self.state.state then self.state.state:draw() end
     
