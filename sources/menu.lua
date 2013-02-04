@@ -31,8 +31,8 @@ function CMenu:create()
     local menu = {}
     setmetatable(menu, CMenu)
     
-    if Cbackground then
-        menu.bg = Cbackground:create()
+    if CBackground then
+        menu.bg = CBackground:create()
     end
     
     menu.ID = Apps:getNextID()
@@ -88,7 +88,7 @@ function CMenu:update(dt)
     for n,b in pairs(self.pages[self.curPage].buttons) do
         b:update(dt)
     end
-    if Cbackground and not self.bgFrozen then
+    if CBackground and not self.bgFrozen then
         self.bg:update(dt)
     end
 end

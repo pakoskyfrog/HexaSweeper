@@ -13,6 +13,7 @@ require "sources/button"
 require "sources/menu"
 require "sources/actions"
 require "sources/mainmenu"
+require "sources/mainmenuBG"
 
 ------------------------
 --  INIT

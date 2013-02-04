@@ -25,7 +25,20 @@ Apps.colors = { white = {255,255,255},
                 magenta = {255,  0,255},
                 yellow  = {  0,255,255},
               }
-              
+Apps.colors.main_Title     = Apps.colors.red
+
+Apps.colors.btn_Red        = {150,  0,  0}
+Apps.colors.btn_Text       = Apps.colors.black
+Apps.colors.btn_BG         = {255,255,255,200}
+Apps.colors.btn_Frame      = {150,255,150}
+Apps.colors.btn_NotEnabled = {100,100,100}
+Apps.colors.btn_Over       = { 50, 50, 50}
+
+Apps.colors.msgZone_Text   = Apps.colors.black
+Apps.colors.msgZone_Bg     = {255,255,255,100}
+
+Apps.colors.hintZone_Text  = Apps.colors.black
+
 Apps.ID = 0
 Apps.curID = 0
 
@@ -151,6 +164,8 @@ function Apps:draw()
 end
 
 function Apps:update(dt)
+    Apps.hintZone.lines = nil
+    
     -- states
     if not self.state then return end -- just in case, state should always be non nil
     if self.state.state then
