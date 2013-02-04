@@ -1,0 +1,37 @@
+===========================================================
+===           README : HEXASWEEPER PROJECT              ===
+===========================================================
+
+_____________________________________
+1/ What is the hexa sweeper project ?
+
+It's a response to a chalenge launched by the Löve2D cummunity. (https://love2d.org/forums/viewtopic.php?f=3&t=13519)
+The aim of the challenge is to create a game in only one month (february) with the theme "Wrong places".
+So, i came up with this idea : "What was your worst experience (gammingly speaking) about wrong places ? Sweeper !"
+
+And here is my project : make a sweeper ! but... with an hexagonal map (i love hexagones !). The first goal i want to achieve is a working game with the regular rules, and if i got good ideas and the time to do it, add an alternate gamemode.
+
+
+_______________
+2/ Project plan
+
+Here is the list of steps i will follow :
+    - Create the file architecture
+    - Build a state application framework
+    - Make a main menu with credits, difficulty/size choice, music/sounds options ...
+    - Make a grid generator
+    - Display the grid
+    - Add user interactions with the grid
+    - Winning / loosing the game
+    - Make a background music and sound effects
+    - Add the hypothetic second game mode
+  
+_______________
+/3 Advancements
+
+
+
+
+pakoskyfrog, the 4th of february
+
+ps : I'm french so i may make some english mistakes ! ^^
