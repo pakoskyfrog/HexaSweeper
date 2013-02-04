@@ -5,7 +5,7 @@
 _____________________________________
 1/ What is the hexa sweeper project ?
 
-It's a response to a chalenge launched by the Löve2D cummunity. (https://love2d.org/forums/viewtopic.php?f=3&t=13519)
+It's a response to a challenge launched by the Löve2D cummunity. (https://love2d.org/forums/viewtopic.php?f=3&t=13519)
 The aim of the challenge is to create a game in only one month (february) with the theme "Wrong places".
 So, i came up with this idea : "What was your worst experience (gammingly speaking) about wrong places ? Sweeper !"
 
@@ -25,10 +25,14 @@ Here is the list of steps i will follow :
     - Winning / loosing the game
     - Make a background music and sound effects
     - Add the hypothetic second game mode
+    - Make a mathematically advanced generator so you can resolve the grid by pure logic, and don't end up with a 50/50 % to explode ! (a bit ambicious ^^)
   
 _______________
-/3 Advancements
+3/ Advancements
 
+    - Architecture : Done
+    - Apps framework : Done
+    - Main menu : 20%
 
 
 
