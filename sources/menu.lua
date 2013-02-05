@@ -218,6 +218,12 @@ function CMenu:addBtn(pseudoBtn)
     if pseudoBtn.onClick and type(pseudoBtn.onClick) == 'function' then
         b.onClick = pseudoBtn.onClick
     end
+    if pseudoBtn.onRollUp and type(pseudoBtn.onRollUp) == 'function' then
+        b.onRollUp = pseudoBtn.onRollUp
+    end
+    if pseudoBtn.onRollDown and type(pseudoBtn.onRollDown) == 'function' then
+        b.onRollDown = pseudoBtn.onRollDown
+    end
     b.name = pseudoBtn.name
     b.pos  = {x=xpos, y=self.pages[page].ypos}
     self.pages[page].ypos = self.pages[page].ypos + self.dy + b.height

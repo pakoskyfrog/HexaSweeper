@@ -165,20 +165,7 @@ end
 
 function Apps:update(dt)
     Apps.hintZone.lines = nil
-    
-    -- states
-    if not self.state then return end -- just in case, state should always be non nil
-    if self.state.state then
-        self.state.state:update(dt)
-        if self.state.bg then
-            self.state.bg:update(dt)
-        end
-    else
-        self.state:update(dt)
-    end
-    
     self.actualTime = self.actualTime + dt
-
     
     --------------------
     -- msgZone 
@@ -189,6 +176,17 @@ function Apps:update(dt)
         end
     else
         self.msgZone.lifeTime = self.actualTime
+    end
+    
+    -- states
+    if not self.state then return end -- just in case, state should always be non nil
+    if self.state.state then
+        self.state.state:update(dt)
+        if self.state.bg then
+            self.state.bg:update(dt)
+        end
+    else
+        self.state:update(dt)
     end
 end
 

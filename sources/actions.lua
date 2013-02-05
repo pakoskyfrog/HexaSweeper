@@ -39,3 +39,31 @@ function Actions:goPage3()
     -- self is the button clicked
     self.parent:setCurrentPage(3)
 end
+
+function Actions:nextOption()
+    --------------------
+    --  Will change button status to the next option
+    self.optSelected = math.mod(self.optSelected, #self.options) + 1
+    self:setCaption(self.prefix .. self.options[self.optSelected])
+end
+
+function Actions:adjustVolumeUp()
+    --------------------
+    --  Add 5 to volume, maxed out at 100
+    self.optSelected = math.min(self.optSelected+5, 100)
+    self:setCaption(self.prefix .. self.optSelected)
+end
+
+function Actions:adjustVolumeDown()
+    --------------------
+    --  Add -5 to volume, 0 is off
+    self.optSelected = math.max(self.optSelected-5, 0)
+    self:setCaption(self.prefix .. self.optSelected)
+end
+
+function Actions:launchGame()
+    --------------------
+    --  Will extract options and launch the game accordingly
+    
+end
+
