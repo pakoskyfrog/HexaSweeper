@@ -35,8 +35,9 @@ function CGame:create(proto)
     
     -- options
     
+    
     -- grid
-    Game.grid = CHexaGrid:create()
+    Game.grid = CHexaGrid:create({sender=self, diff=proto.diff, size=proto.size})
     
     -- timer
     -- bg
@@ -76,6 +77,9 @@ function CGame:keypressed(key)
         else
             -- generic code : Pause menu
             -- self.state = CGPause:create()
+            
+            -- tmp
+            Actions.activateMainMenu()
         end
     end
     

@@ -16,6 +16,7 @@ _______________
 2/ Project plan
 
 Here is the list of steps i will follow :
+
     - Create the file architecture
     - Build a state application framework
     - Make a main menu with credits, difficulty/size choice, music/sounds options ...
@@ -34,7 +35,8 @@ _______________
     - Apps framework : Done
     - Main menu : 90%
     - Grid generator : done [ramdom]
-    - Grid display : simplest [6 edges circles]
+    - Grid display : simplest [6 edges circles] + colored counts
+    - Grid annalyser : trapped neighboors counts
 
 __________
 4/ Credits

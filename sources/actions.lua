@@ -15,6 +15,14 @@
 --  Init
 Actions = {}
 
+function Actions.activateMainMenu()
+    --------------------
+    --  assigne primary state to the mainmenu
+    Apps.state = CMainMenu:create()
+    Apps.state:load()
+end
+
+
 function Actions.wip()
     --------------------
     --  Dummy function that indicates it's a work in progress
@@ -75,6 +83,12 @@ function Actions:launchGame()
     --  Will extract options and launch the game accordingly
     
     -- option transfert TODO
-    Apps.state = CGame:create()
+    local btns = Apps.state.pages[2].buttons
+    local options = {}
+    options.mode = btns.mode.options[btns.mode.optSelected]
+    options.diff = btns.diff.options[btns.diff.optSelected]
+    options.size = btns.size.options[btns.size.optSelected]
+    
+    Apps.state = CGame:create(options)
 end
 

@@ -40,12 +40,15 @@ function CHexaGrid:create(proto)
     elseif proto.size == 'Normal' then HexaGrid.width = 20
     elseif proto.size == 'Big' then HexaGrid.width = 30
     end
+    
+    proto.diff = proto.diff or 'Normal'
+    
     HexaGrid.ID = Apps:getNextID()
     
     
     CHexaGrid.generateGrid(HexaGrid)
-    CHexaGrid.fillGrid(HexaGrid, proto.diff or 'Normal')
-    
+    CHexaGrid.fillGrid(HexaGrid, proto.diff)
+    CHexaGrid.annalyseGrid(HexaGrid)
     
     return HexaGrid
 end
@@ -195,6 +198,44 @@ function CHexaGrid:updateTilePositions()
         tile.pos.y = oy + tile.Vpos.u * u[2] + tile.Vpos.v * v[2]
     end
 end
+
+function CHexaGrid:getVois(u,v)
+    --------------------
+    --  returns the list of the 6 neighboors (2D array)
+    return {
+                { 1+u,-1+v},
+                { 1+u, 0+v},
+                { 0+u, 1+v},
+                {-1+u, 1+v},
+                {-1+u, 0+v},
+                { 0+u,-1+v},
+           }
+end
+
+function CHexaGrid:trapedVois(u,v)
+    --------------------
+    --  returns the count of trapped neighboors in the 6 arround
+    local vois = self:getVois(u,v)
+    local count = 0
+    for i = 1, 6 do
+        local tile = self.tileCollection[vois[i][1]..":"..vois[i][2]]
+        if tile then
+            if tile.content == 'bomb' then count = count + 1 end
+        end
+    end
+    
+    return count
+end
+
+function CHexaGrid:annalyseGrid()
+    --------------------
+    --  this function will calculate the repartition of the bombs and associates the counts to each tile
+    
+    for coords, tile in pairs(self.tileCollection) do
+        tile.bombCount = self:trapedVois(tile.Vpos.u, tile.Vpos.v)
+    end
+end
+
 
 ------------------------
 --  DEBUG funcs

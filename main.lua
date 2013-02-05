@@ -52,9 +52,9 @@ function love.update(dt)
     Apps:update(dt)
     
     -- framerate limiter
-    if dt < 1/30 then
-		love.timer.sleep(1/30 - dt)
-	end
+    if dt < 0.016 then  --60 FPS
+        love.timer.sleep(0.016 - dt)
+    end
 end
 
 

@@ -38,6 +38,8 @@ function CMainMenu:create()
     -- PAGE 2 : new game
         -- TODO : add options capabylities inside the Class buttons
     menu1:addNewPage()
+    menu1:addBtn({caption='Let\'s GO !', name='launchGame', hint='Launch the game', onClick=Actions.launchGame, page=2})
+
     menu1:addBtn({caption='Mode : Normal', name='mode', hint='Game modes', onClick=Actions.wip, page=2})
     menu1.pages[2].buttons.mode.options = {'Normal', 'Alchemist'}
     menu1.pages[2].buttons.mode.prefix = 'Mode : '
@@ -53,8 +55,6 @@ function CMainMenu:create()
     menu1.pages[2].buttons.size.prefix = 'Size : '
     menu1.pages[2].buttons.size.optSelected = 1
     
-    -- + difficulty, size
-    menu1:addBtn({caption='Let\'s GO !', name='launchGame', hint='Launch the game', onClick=Actions.launchGame, page=2})
     menu1:addBtn({caption='Back', name='goBack', hint='Retour au menu principal', onClick=Actions.goPage1, page=2})
     
     -- PAGE 3 : options

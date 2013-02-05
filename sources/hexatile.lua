@@ -58,16 +58,29 @@ function CHexaTile:draw()
     local z = self.parent.zoomFactor or 1
     local lg = love.graphics
     
+    -- a tile can be : 
+        -- content = void,  no trapped neighboor
+        -- content = void,  trapped neighboors
+        -- content = any, undiscovered
+        -- content = any, trapped discovered
+        -- content = any, interrogation
+    
     --===========================
     --  == dev temp code lines ==
     
     -- just draw a circle
     lg.setColor(Apps.colors.gray)
-    if self.content == 'bomb' then lg.setColor(Apps.colors.red) end -- discovered ?
+    if self.content == 'bomb' then lg.setColor(Apps.colors.red) end
     lg.circle('fill', self.pos.x, self.pos.y, 2*self.radius * z, 6)
     lg.setColor(Apps.colors.white)
     lg.circle('line', self.pos.x, self.pos.y, 2*self.radius * z, 6)
     
+    local b = self.bombCount or 0
+    if self.content == 'void' and b>0 then
+        lg.setFont(Apps.fonts['default'])
+        lg.setColor(Apps.dangerColors[b])
+        lg.print(tostring(b), self.pos.x -8, self.pos.y -13)
+    end
     --===========================
 end
 

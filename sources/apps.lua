@@ -33,7 +33,7 @@ Apps.colors = { white = {255,255,255},
                 green = {  0,255,  0},
                 cyan    = {  0,255,255},
                 magenta = {255,  0,255},
-                yellow  = {  0,255,255},
+                yellow  = {255,255,  0},
               }
 Apps.colors.main_Title     = Apps.colors.red
 
@@ -68,12 +68,23 @@ Apps.msgZone.color = Apps.colors.msgZone_Text or {150,150,150}    -- display col
 Apps.msgZone.backColor = Apps.colors.msgZone_Bg or {0,0,0,200}
 Apps.msgZone.lifeTime = 0               -- record of first message lifetime
 
+------------------------
+--  dangerColors , 1..6 = low..extreme
+Apps.dangerColors = {
+    Apps.colors.green,
+    {127,255,  0},
+    Apps.colors.yellow,
+    {255,127,  0},
+    Apps.colors.red,
+    {255,  0,127},
+}
+
+
 
 ------------------------
 --  Apps functions
 function Apps:load()
-    Apps.state = CMainMenu:create()
-    Apps.state:load()
+    Actions.activateMainMenu()
 end
 
 function Apps:keypressed(key)
