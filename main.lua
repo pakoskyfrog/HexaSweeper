@@ -8,12 +8,15 @@ math.randomseed(os.time())
 ------------------------
 --  Dependencies
 require "sources/apps"
-require "sources/game"
 require "sources/button"
 require "sources/menu"
 require "sources/actions"
 require "sources/mainmenu"
 require "sources/mainmenuBG"
+require "sources/game"
+require "sources/gameBG"
+require "sources/hexatile"
+require "sources/hexagrid"
 
 ------------------------
 --  INIT
