@@ -1,3 +1,5 @@
+-- Pakoskyfrog 2013
+
 
 ------------------------
 --  INIT
@@ -5,6 +7,14 @@ Apps = {}
 Apps.debug = true
 Apps.version = 0.1
 Apps.type = 'Apps'
+
+Apps.ID = 0
+Apps.curID = 0
+
+Apps.actualTime = 0
+
+------------------------
+--  Ressources
 
 -- some fonts (list may change)
 Apps.fonts = { default = love.graphics.newFont(24),
@@ -39,9 +49,6 @@ Apps.colors.msgZone_Bg     = {255,255,255,100}
 
 Apps.colors.hintZone_Text  = Apps.colors.black
 
-Apps.ID = 0
-Apps.curID = 0
-
 --------------------
 -- hintZone
 Apps.hintZone = {}
@@ -60,8 +67,6 @@ Apps.msgZone.duration = 0.75             -- sec
 Apps.msgZone.color = Apps.colors.msgZone_Text or {150,150,150}    -- display color
 Apps.msgZone.backColor = Apps.colors.msgZone_Bg or {0,0,0,200}
 Apps.msgZone.lifeTime = 0               -- record of first message lifetime
-
-Apps.actualTime = 0
 
 
 ------------------------

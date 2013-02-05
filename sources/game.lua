@@ -1,3 +1,5 @@
+-- Pakoskyfrog 2013
+
 -----------------------------------------------------------
 ----    CGame definition
 -----------------------------------------------------------
@@ -31,6 +33,13 @@ function CGame:create(proto)
     
     if not proto then proto = {} end
     
+    -- options
+    
+    -- grid
+    Game.grid = CHexaGrid:create()
+    
+    -- timer
+    -- bg
     
     return Game
 end
@@ -48,14 +57,16 @@ function CGame:draw()
     end
     
     -- if self.state then self.state:draw() end -- done in Apps:draw()
+    
+    self.grid:draw()
 end
 
 function CGame:update(dt)
-    
+    self.grid:update(dt)
 end
 
 function CGame:mousepressed(x, y, btn)
-    
+    self.grid:mousepressed(x, y, btn)
 end
 
 function CGame:keypressed(key)

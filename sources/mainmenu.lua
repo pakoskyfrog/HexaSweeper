@@ -1,3 +1,5 @@
+-- Pakoskyfrog 2013
+
 -----------------------------------------------------------
 ----    CMainMenu definition
 -----------------------------------------------------------
@@ -30,7 +32,8 @@ function CMainMenu:create()
     menu1:addBtn({caption='New', name='new', hint='Launch the settings for a new game', onClick=Actions.goPage2}) --, onClick=func , page=2
     menu1:addBtn({caption='Options', name='options', hint='Music and sounds options', onClick=Actions.goPage3})
     menu1:addBtn({caption='High scores', name='highscore', hint='Displays the best scores !', onClick=Actions.wip})
-    menu1:addBtn({caption='Credits', name='credits', hint='Shows the credits list', onClick=Actions.wip})
+    menu1:addBtn({caption='Achievements', name='achiev', hint='Displays what you have amazingly done !', onClick=Actions.wip})
+    menu1:addBtn({caption='Credits', name='credits', hint='Shows the credits list', onClick=Actions.goPage4})
     
     -- PAGE 2 : new game
         -- TODO : add options capabylities inside the Class buttons
@@ -51,7 +54,7 @@ function CMainMenu:create()
     menu1.pages[2].buttons.size.optSelected = 1
     
     -- + difficulty, size
-    menu1:addBtn({caption='Let\'s GO !', name='launchGame', hint='Launch the game', onClick=Actions.wip, page=2})
+    menu1:addBtn({caption='Let\'s GO !', name='launchGame', hint='Launch the game', onClick=Actions.launchGame, page=2})
     menu1:addBtn({caption='Back', name='goBack', hint='Retour au menu principal', onClick=Actions.goPage1, page=2})
     
     -- PAGE 3 : options
@@ -66,6 +69,17 @@ function CMainMenu:create()
     menu1.pages[3].buttons.effects.optSelected = 50
     
     menu1:addBtn({caption='Back', name='goBack', hint='Retour au menu principal', onClick=Actions.goPage1, page=3})
+    
+    -- PAGE 3 : options
+    menu1:addNewPage()
+    menu1:addBtn({caption='Pako Skyfrog 2013', name='me', hint='That\'s me ^^', page=4})
+    menu1:addBtn({caption='Coded in Lua', name='lua', page=4})
+    menu1:addBtn({caption='Love2D at http://love2d.org', name='love', page=4})
+    menu1:addBtn({caption='Cliparts from http://openclipart.org', name='cliparts', page=4})
+    menu1:addBtn({caption='Editor of choice : The Gimp', name='gimp', page=4})
+    menu1:addBtn({caption='Editor of choice : Notepad++', name='notepad', page=4})
+    
+    menu1:addBtn({caption='Back', name='goBack', hint='Retour au menu principal', onClick=Actions.goPage1, page=4})
 
     
     return menu1
@@ -75,33 +89,6 @@ end
 ------------------------
 --  Callbacks
 
-function CMainMenu:load()
-    
-end
-
-function CMainMenu:draw()
-    
-end
-
-function CMainMenu:update(dt)
-    
-end
-
-function CMainMenu:mousepressed(x, y, btn)
-    
-end
-
-function CMainMenu:keypressed(key)
-    
-end
-
-function CMainMenu:mousereleased(x, y, btn)
-    
-end
-
-function CMainMenu:keyreleased(key)
-    
-end
 
 ------------------------
 --  Static functions

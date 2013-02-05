@@ -1,3 +1,5 @@
+-- Pakoskyfrog 2013
+
 -----------------------------------------------------------
 ----    Action functions
 -----------------------------------------------------------
@@ -40,6 +42,13 @@ function Actions:goPage3()
     self.parent:setCurrentPage(3)
 end
 
+function Actions:goPage4()
+    --------------------
+    --  Makes the menu goes to the credits page
+    -- self is the button clicked
+    self.parent:setCurrentPage(4)
+end
+
 function Actions:nextOption()
     --------------------
     --  Will change button status to the next option
@@ -65,5 +74,7 @@ function Actions:launchGame()
     --------------------
     --  Will extract options and launch the game accordingly
     
+    -- option transfert TODO
+    Apps.state = CGame:create()
 end
 
