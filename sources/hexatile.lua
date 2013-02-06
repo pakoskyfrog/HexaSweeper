@@ -18,10 +18,11 @@ CHexaTile.__index = CHexaTile
 
 ------------------------
 --  Properties
-CHexaTile.type = "CHexaTile"
-CHexaTile.content = 'void' -- con be 'bomb' or whaterver is needed for gamemodes
--- CHexaTile.hexaCoords = {}
-CHexaTile.radius = 10
+CHexaTile.type    = "CHexaTile"
+CHexaTile.content = 'void' -- can be 'bomb' or whaterver is needed for gamemodes
+CHexaTile.guess   = 'none' -- it's what the user supposes the tile is, cycled by right click
+CHexaTile.guesses = {'none','bomb','interro'}
+CHexaTile.radius  = 20
 CHexaTile.discovered = false
 
 ------------------------
@@ -68,19 +69,37 @@ function CHexaTile:draw()
     --===========================
     --  == dev temp code lines ==
     
-    -- just draw a circle
-    lg.setColor(Apps.colors.gray)
-    if self.content == 'bomb' then lg.setColor(Apps.colors.red) end
-    lg.circle('fill', self.pos.x, self.pos.y, 2*self.radius * z, 6)
-    lg.setColor(Apps.colors.white)
-    lg.circle('line', self.pos.x, self.pos.y, 2*self.radius * z, 6)
-    
-    local b = self.bombCount or 0
-    if self.content == 'void' and b>0 then
-        lg.setFont(Apps.fonts['default'])
-        lg.setColor(Apps.dangerColors[b])
-        lg.print(tostring(b), self.pos.x -8, self.pos.y -13)
+    if self.discovered then
+        -- just draw a circle
+        lg.setColor(Apps.colors.gray)
+        if self.content == 'bomb' then lg.setColor(Apps.colors.red) end
+        lg.circle('fill', self.pos.x, self.pos.y, self.radius * z, 6)
+        lg.setColor(Apps.colors.white)
+        lg.circle('line', self.pos.x, self.pos.y, self.radius * z, 6)
+        
+        local b = self.bombCount or 0
+        if self.content == 'void' and b>0 then
+            lg.setFont(Apps.fonts['default'])
+            lg.setColor(Apps.dangerColors[b])
+            lg.print(tostring(b), self.pos.x -8, self.pos.y -13)
+        end
+    else
+        lg.setColor({ 50, 50, 50})
+        lg.circle('fill', self.pos.x, self.pos.y, self.radius * z, 6)
+        
+        -- guesses :
+        if not (self.guess == 'none') then
+            local pic = self.parent.parent.imgs[self.guess]
+            if pic then
+                lg.setColor(Apps.colors.white)
+                love.graphics.draw(pic, self.pos.x -12*z, self.pos.y -14*z, 0, 0.25*z, 0.25*z)
+            end
+        end
     end
+    
+    
+    lg.setColor(Apps.colors.white)
+    lg.circle('line', self.pos.x, self.pos.y, self.radius * z, 6)
     --===========================
 end
 
@@ -88,7 +107,7 @@ function CHexaTile:update(dt)
     
 end
 
-function CHexaTile:mousepressed(x, y, btn)
+function CHexaTile:mousepressed(u, v, btn)
     
 end
 
@@ -96,7 +115,7 @@ function CHexaTile:keypressed(key)
     
 end
 
-function CHexaTile:mousereleased(x, y, btn)
+function CHexaTile:mousereleased(u, v, btn)
     
 end
 
@@ -106,24 +125,7 @@ end
 
 ------------------------
 --  Static functions
--- function CHexaTile.updateHexaCoords(zoom)
-    -- --------------------
-    -- --  This function will recalculate the reference coordinates of the hexagons
-    -- -- CHexaTile.hexaCoords
-    
-    -- local pi = math.pi
-    -- local piOver3 = pi / 3
-    -- local r = CHexaTile.radius
-    -- local a = 0 -- alpha
-    
-    -- for i = 1, 6 do
-        -- local x = r * math.cos(a)
-        -- local y = r * math.sin(a)
-        -- CHexaTile.hexaCoords[i] = {x,y}
-        -- a = a + piOver3
-    -- end
 
--- end
 
 function CHexaTile.setRadius(r)
     --------------------
@@ -138,6 +140,61 @@ end
 function CHexaTile:getType()
     return self.type
 end
+
+function CHexaTile:getVois()
+    --------------------
+    --  Returns the list of its neighboors
+    
+    return self.parent:getVois(self.Vpos.u, self.Vpos.v)
+end
+
+function CHexaTile:nextGuess()
+    --------------------
+    --  This function will cycle through the guesses possibilities
+    if self.discovered then return false end
+    
+    for index, value in ipairs(self.guesses) do
+        -- print(index, value, '? '..self.guess)
+        if self.guess == value then
+            local ind = math.mod(index, #self.guesses)+1 -- 1..max 
+            self.guess = self.guesses[ind]
+            -- print('  match '..ind..' new is '..self.guess)
+            return true
+        end
+    end
+    
+    return true
+end
+
+function CHexaTile:activate() -- = click
+    --------------------
+    --  Activation of the tile, determined by its status
+    if self.discovered then return true, 'done' end
+    if self.content == 'bomb' then
+        -- BOOM you died
+        return false, 'boom'
+    elseif self.content == 'void' then
+        self.discovered = true
+        
+        -- has neighboors ?
+        if self.bombCount == 0 then
+            -- chain reaction, nothing arround, you can click arround
+            local vois = self:getVois()
+            for i = 1, 6 do
+                local tile = self.parent.tileCollection[vois[i][1]..":"..vois[i][2]]
+                if tile then
+                    tile:activate()
+                end
+            end
+            
+        end
+        
+        return true, 'void'
+    end
+    
+    return true, 'error'
+end
+
 
 ------------------------
 --  DEBUG funcs
@@ -154,7 +211,7 @@ end
 
 ------------------------
 --  Execs
--- CHexaTile.updateHexaCoords(1)
+
 
 
 print "CHexaTile loaded"

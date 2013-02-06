@@ -20,7 +20,7 @@ CHexaGrid.__index = CHexaGrid
 ------------------------
 --  Properties
 CHexaGrid.type = "CHexaGrid"
-CHexaGrid.zoomFactor = 1
+CHexaGrid.zoomFactor = 1.5
 CHexaGrid.camera = {}
 CHexaGrid.camera.orig = {0,0} -- screen center
 
@@ -73,15 +73,50 @@ function CHexaGrid:update(dt)
     -- end
 end
 
-function CHexaGrid:mousepressed(x, y, btn)
+function CHexaGrid:mousepressed(u, v, btn)
+    local tile = self.tileCollection[u..":"..v]
+    if tile == nil then return end
     
+    if btn == 'l' then
+        -- left click on the tile at (u,v)
+        -- activate the tile
+        if not tile:activate() then
+            -- BOOM
+            print('you died (l)')
+        end
+        
+    elseif btn == 'm' then
+        -- middle click on the tile at (u,v)
+        -- activate the tile and all the others around which are not flagged
+        if not tile:activate() then
+            -- BOOM
+            print('you died (m)')
+        end
+        local vois = tile:getVois()
+        for i = 1, 6 do
+            local vtile = self.tileCollection[vois[i][1]..":"..vois[i][2]]
+            if vtile and vtile.guess == 'none' then
+                if not vtile:activate() then
+                    -- BOOM
+                    print('you died (vm)')
+                end
+            end
+        end
+        
+    elseif btn == 'r' then
+        -- right click on the tile at (u,v)
+        -- flag dropping cycle : (nothing, bomb, interrogation)
+        
+        tile:nextGuess()
+        print('tile at '..u..":"..v..' guess = '..tile.guess)
+    end
 end
 
 function CHexaGrid:keypressed(key)
     
 end
 
-function CHexaGrid:mousereleased(x, y, btn)
+function CHexaGrid:mousereleased(u, v, btn)
     
 end
 
@@ -179,9 +214,11 @@ function CHexaGrid:updateTilePositions()
     --------------------
     --  this will calculate tile screen position according to (u,v,z)
     
+    -- optimisation can be achieve using values of cos(pi/6)=sqrt(3)/2 and sin(pi/6)=1/2
+    
     local z = self.zoomFactor      -- zoom
     local r = CHexaTile.radius * z -- radius
-    local a2 = 2* r * math.sqrt(3) -- appex *2
+    local a2 = r * math.sqrt(3) -- appex *2
     local b = math.pi / 3
     
     -- norm verctors in x,y coords

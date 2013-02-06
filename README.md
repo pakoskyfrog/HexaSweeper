@@ -35,7 +35,8 @@ Here is the list of steps i will follow :
     - Grid generator : done [ramdom]
     - Grid display : simplest [6 edges circles] + colored counts
     - Grid annalyser : trapped neighboors counts
-
+    - HexaTiles : Guesses and activations (game is playable ^^)
+    
 
 ## 4/ Credits
 

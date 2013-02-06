@@ -96,10 +96,10 @@ function Apps:keypressed(key)
     -- states
     if not self.state then return end -- just in case, state should always be non nil
     if self.state.state then
-        self:addMsg((self.state.state:getType()).." : "..key)
+        -- self:addMsg((self.state.state:getType()).." : "..key)
         self.state.state:keypressed(key)
     else
-        self:addMsg((self.state:getType()).." : "..key)
+        -- self:addMsg((self.state:getType()).." : "..key)
         self.state:keypressed(key)
     end
 end
