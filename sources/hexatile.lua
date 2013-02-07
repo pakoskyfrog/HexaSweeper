@@ -69,6 +69,8 @@ function CHexaTile:draw()
     --===========================
     --  == dev temp code lines ==
     
+    love.graphics.setLineWidth(2)
+    
     if self.discovered then
         -- just draw a circle
         lg.setColor(Apps.colors.gray)
@@ -154,11 +156,20 @@ function CHexaTile:nextGuess()
     if self.discovered then return false end
     
     for index, value in ipairs(self.guesses) do
-        -- print(index, value, '? '..self.guess)
         if self.guess == value then
-            local ind = math.mod(index, #self.guesses)+1 -- 1..max 
+            local hud = Apps.state.hud
+            
+            if self.guess == 'bomb' then
+                hud.minesLeft = hud.minesLeft +1
+            end
+            
+            local ind = math.mod(index, #self.guesses)+1 -- 1..max
             self.guess = self.guesses[ind]
-            -- print('  match '..ind..' new is '..self.guess)
+            
+            if self.guess == 'bomb' then
+                hud.minesLeft = hud.minesLeft -1
+            end
+            
             return true
         end
     end

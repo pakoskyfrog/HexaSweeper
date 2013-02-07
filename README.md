@@ -36,7 +36,10 @@ Here is the list of steps i will follow :
     - Grid display : simplest [6 edges circles] + colored counts
     - Grid annalyser : trapped neighboors counts
     - HexaTiles : Guesses and activations (game is playable ^^)
-    
+    - Zoom capabillities
+    - Winning and loosing
+    - Tweaked the difficulty a bit
+    - Alpha 0.1 released !
 
 ## 4/ Credits
 

@@ -16,14 +16,9 @@
 CGame = {}
 CGame.__index = CGame
 
-CGame.Images = {}
--- CGame.Images.fde = love.graphics.newImage("gfx/fde.png")
-
-
 ------------------------
 --  Properties
 CGame.type = "CGame"
-
 
 ------------------------
 --  Constructor
@@ -35,12 +30,12 @@ function CGame:create(proto)
     
     -- options
     
-    -- HUD
-    
     -- grid
     Game.grid = CHexaGrid:create({sender=Game, diff=proto.diff, size=proto.size})
     
-    -- timer
+    -- HUD
+    Game.hud = CHud:create({sender=Game})
+    
     -- bg
     
     CGame.load(Game)
@@ -56,15 +51,19 @@ function CGame:load()
     self.imgs = {}
     self.imgs.interro = love.graphics.newImage("gfx/interro.png")
     self.imgs.bomb    = love.graphics.newImage("gfx/bomb.png")
+    self.imgs.fde     = love.graphics.newImage("gfx/tsar.jpg")
     
+    self.imgs.msg     = love.graphics.newImage("gfx/msg.png")
+    self.imgs.lost    = love.graphics.newImage("gfx/nuke.png")
+    self.imgs.won     = love.graphics.newImage("gfx/win.png")
     
     print('Game loaded')
 end
 
 function CGame:draw()
-    if self.Images.fde then
+    if self.imgs.fde then
         love.graphics.setColor({255,255,255})
-        love.graphics.draw(self.Images.fde, 0, 0)
+        love.graphics.draw(self.imgs.fde, 0, 0)
     end
     
     -- if self.state then self.state:draw() end -- done in Apps:draw()
@@ -85,16 +84,70 @@ function CGame:draw()
         end
         
     end
+    
+    -- HUD
+    self.hud:draw()
+    
+    if self.hasWon then
+        love.graphics.setColor(Apps.colors.white)
+        local w = self.imgs.msg:getWidth()
+        local h = self.imgs.msg:getHeight()
+        love.graphics.draw(self.imgs.msg, 400-w/2, 300-h/2)
+        local z = 0.25
+        w = self.imgs.won:getWidth() * z
+        h = self.imgs.won:getHeight() * z
+        love.graphics.draw(self.imgs.won, 400-w/2, 300-h/2, 0, z, z)
+        
+        love.graphics.setColor(Apps.colors.black)
+        love.graphics.setFont(Apps.fonts.huge)
+        
+        w = Apps.fonts.huge:getWidth('You Won !')
+        h = Apps.fonts.huge:getHeight()
+        love.graphics.print('You Won !', 400-w/2, 300-h/2)
+        
+    elseif self.hasLost then
+        love.graphics.setColor(Apps.colors.white)
+        local w = self.imgs.msg:getWidth()
+        local h = self.imgs.msg:getHeight()
+        love.graphics.draw(self.imgs.msg, 400-w/2, 300-h/2)
+        local z = 0.25
+        w = self.imgs.lost:getWidth() * z
+        h = self.imgs.lost:getHeight() * z
+        love.graphics.draw(self.imgs.lost, 250-w/2, 300-h/2, 0, z, z)
+        
+        love.graphics.setColor(Apps.colors.black)
+        love.graphics.setFont(Apps.fonts.big)
+        
+        w = Apps.fonts.big:getWidth('You Lost ...')
+        h = Apps.fonts.big:getHeight()
+        love.graphics.print('You Lost ...', 500-w/2, 300-h/2)
+    end
 end
 
 function CGame:update(dt)
-    self.grid:update(dt)
+    self.hud:update(dt)
+    if not (self.hasWon or self.hasLost) then
+        self.grid:update(dt)
+    end
 end
 
 function CGame:mousepressed(x, y, btn)
-    local u,v = self:screenTouv(x,y)
-    print(btn,' : x,y =',x,y,' : u,v =',u,v)
-    self.grid:mousepressed(u, v, btn)
+    -- clicking on the hud button doesn't make you click under it
+    if not self.hud:mousepressed(x, y, btn) then
+        if not (self.hasWon or self.hasLost) then
+            local u,v = self:screenTouv(x,y)
+            -- print(btn,' : x,y =',x,y,' : u,v =',u,v)
+            self.grid:mousepressed(u, v, btn)
+            if self:winTest() then
+                self:won()
+            end
+        end
+    end
+    
+    if not (self.hasWon or self.hasLost) then
+        if btn == 'wu' then self.grid:zoomOut() end
+        if btn == 'wd' then self.grid:zoomIn() end
+    end
 end
 
 function CGame:keypressed(key)
@@ -102,24 +155,18 @@ function CGame:keypressed(key)
         if self.state then
             self.state = nil
         else
-            -- generic code : Pause menu
-            -- self.state = CGPause:create()
-            
-            -- tmp
-            Actions.activateMainMenu()
+            self.state = CPauseMenu:create()
         end
     end
     
-    -- tmp / should call a set func
-    if key == 'kp-' then
-        self.grid.zoomFactor = self.grid.zoomFactor * 0.5
-        self.grid:updateTilePositions()
+    if not (self.hasWon or self.hasLost) then
+        if key == 'kp-' then
+            self.grid:zoomOut()
+        end
+        if key == 'kp+' then
+            self.grid:zoomIn()
+        end
     end
-    if key == 'kp+' then
-        self.grid.zoomFactor = self.grid.zoomFactor * 2
-        self.grid:updateTilePositions()
-    end
-    
     
 end
 
@@ -213,6 +260,32 @@ function CGame:screenTouv(sx,sy)
     if v > -1 then v = math.abs(v) end
     
     return u,v
+end
+
+function CGame:lost()
+    --------------------
+    --  call this when the player dies
+    self.hasLost = true
+end
+function CGame:won()
+    --------------------
+    --  call this when the player wins
+    self.hasWon = true
+end
+
+function CGame:winTest()
+    --------------------
+    --  Scan the grid to detect if the player discovered all the safe tiles
+    local test = true
+    
+    for coords, tile in pairs(self.grid.tileCollection) do
+        if tile.content == 'void' then
+            test = test and tile.discovered
+        end
+        if not test then break end
+    end
+    
+    return test
 end
 
 

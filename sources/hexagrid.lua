@@ -20,7 +20,7 @@ CHexaGrid.__index = CHexaGrid
 ------------------------
 --  Properties
 CHexaGrid.type = "CHexaGrid"
-CHexaGrid.zoomFactor = 1.5
+CHexaGrid.zoomFactor = 1
 CHexaGrid.camera = {}
 CHexaGrid.camera.orig = {0,0} -- screen center
 
@@ -71,6 +71,21 @@ function CHexaGrid:update(dt)
     -- for coords, tile in pairs(self.tileCollection) do
         -- tile:update(dt)
     -- end
+    
+    -- camera sliding
+    local h = (1+self.width*2) * CHexaTile.radius * self.zoomFactor
+    local w = 4/3 * h
+    
+    if h > 600 then
+        local x = love.mouse.getX()
+        local y = love.mouse.getY()
+        
+        self.camera.orig[1] = -(w-800)*(x-400)/400
+        self.camera.orig[2] = -(h-600)*(y-300)/300
+        
+        self:updateTilePositions()
+    end
+    
 end
 
 function CHexaGrid:mousepressed(u, v, btn)
@@ -80,17 +95,21 @@ function CHexaGrid:mousepressed(u, v, btn)
     if btn == 'l' then
         -- left click on the tile at (u,v)
         -- activate the tile
+        if not (tile.guess == 'none') then return end
         if not tile:activate() then
             -- BOOM
             print('you died (l)')
+            self.parent:lost()
         end
         
     elseif btn == 'm' then
         -- middle click on the tile at (u,v)
         -- activate the tile and all the others around which are not flagged
+        if not (tile.guess == 'none') then return end
         if not tile:activate() then
             -- BOOM
             print('you died (m)')
+            self.parent:lost()
         end
         local vois = tile:getVois()
         for i = 1, 6 do
@@ -99,6 +118,7 @@ function CHexaGrid:mousepressed(u, v, btn)
                 if not vtile:activate() then
                     -- BOOM
                     print('you died (vm)')
+                    self.parent:lost()
                 end
             end
         end
@@ -179,20 +199,22 @@ function CHexaGrid:fillGrid(diff)
     
     local prob -- percentage of field covered by mines
     if diff == 'Trivial' then
-        prob = 10
+        prob = 5
     elseif diff == 'Easy' then
-        prob = 20
+        prob = 10
     elseif diff == 'Tricky' then
-        prob = 40
+        prob = 25
     elseif diff == 'Impossible' then
-        prob = 60
+        prob = 40
     else -- 'Normal'
-        prob = 30
+        prob = 18
     end
     
     local n=self.width/2
     local nt = (1+6*(n*(n+1)/2))
     local nbr = math.floor(prob/100 * nt) -- number of mines = prob * Ntotal
+    self.NMines = nbr
+    self.NTiles = nt
     
     for m = 1, nbr do
         local tile
@@ -271,6 +293,15 @@ function CHexaGrid:annalyseGrid()
     for coords, tile in pairs(self.tileCollection) do
         tile.bombCount = self:trapedVois(tile.Vpos.u, tile.Vpos.v)
     end
+end
+
+function CHexaGrid:zoomIn()
+    CHexaGrid.setZoomFactor(self.zoomFactor * 1.1)
+    self:updateTilePositions()
+end
+function CHexaGrid:zoomOut()
+    CHexaGrid.setZoomFactor(self.zoomFactor * 0.9)
+    self:updateTilePositions()
 end
 
 

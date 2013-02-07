@@ -92,3 +92,8 @@ function Actions:launchGame()
     Apps.state = CGame:create(options)
 end
 
+function Actions:nullUnderState()
+    --------------------
+    --  set the underState to nil
+    Apps.state.state = nil
+end

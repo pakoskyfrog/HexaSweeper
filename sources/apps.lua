@@ -49,6 +49,8 @@ Apps.colors.msgZone_Bg     = {255,255,255,100}
 
 Apps.colors.hintZone_Text  = Apps.colors.black
 
+Apps.colors.hud_front      = Apps.colors.white
+
 --------------------
 -- hintZone
 Apps.hintZone = {}
@@ -108,10 +110,10 @@ function Apps:keyreleased(key)
     -- states
     if not self.state then return end -- just in case, state should always be non nil
     if self.state.state then
-        self:addMsg((self.state.state:getType()).." : "..key)
+        -- self:addMsg((self.state.state:getType()).." : "..key)
         self.state.state:keyreleased(key)
     else
-        self:addMsg((self.state:getType()).." : "..key)
+        -- self:addMsg((self.state:getType()).." : "..key)
         self.state:keyreleased(key)
     end
 end

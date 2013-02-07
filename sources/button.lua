@@ -65,12 +65,12 @@ function CButton:draw()
     
     if self.hasBG then
         lg.setColor(self.colors.bg)
-        lg.rectangle('fill',self.pos.x, self.pos.y, self.width, self.heigth)
+        lg.rectangle('fill',self.pos.x, self.pos.y, self.width, self.height)
     end
     if self.framed then
         lg.setColor(self.colors.frame)
         lg.setLineWidth(3)
-        lg.rectangle('line',self.pos.x, self.pos.y, self.width, self.heigth)
+        lg.rectangle('line',self.pos.x, self.pos.y, self.width, self.height)
     end
     
     
