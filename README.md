@@ -40,6 +40,7 @@ Here is the list of steps i will follow :
     - Winning and loosing
     - Tweaked the difficulty a bit
     - Alpha 0.1 released !
+    - Main menu : changed fonts, realignments, ...
 
 ## 4/ Credits
 

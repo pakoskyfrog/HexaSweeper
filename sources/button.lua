@@ -73,8 +73,12 @@ function CButton:draw()
         lg.rectangle('line',self.pos.x, self.pos.y, self.width, self.height)
     end
     
+    if self.selfFont then
+        lg.setFont(self.selfFont)
+    else
+        lg.setFont(Apps.fonts[self.fontSize])
+    end
     
-    lg.setFont(Apps.fonts[self.fontSize])
     if self.hover then
         lg.setColor(self.colors.over)
     else
@@ -146,8 +150,14 @@ function CButton:getType() return self.type end
 function CButton:setCaption(text)
     local btn = self
     btn.caption = text
-    btn.height = Apps.fonts[btn.fontSize]:getHeight()
-    btn.width  = Apps.fonts[btn.fontSize]:getWidth(text)
+    if self.selfFont then
+        btn.height = self.selfFont:getHeight()
+        btn.width  = self.selfFont:getWidth(text)
+    else
+        btn.height = Apps.fonts[btn.fontSize]:getHeight()
+        btn.width  = Apps.fonts[btn.fontSize]:getWidth(text)
+    end
+    
 end
 
 function CButton:setFont(size)

@@ -14,7 +14,7 @@
 ------------------------
 --  Init
 CMainMenu = {}
-CMainMenu.__index = CMainMenu
+setmetatable(CMainMenu, CMenu)
 
 ------------------------
 --  Properties
@@ -25,6 +25,9 @@ CMainMenu.type = "CMainMenu"
 --  Constructor
 function CMainMenu:create()
     local menu1 = CMenu.create()
+    setmetatable(menu1, self)
+    self.__index = self
+    
     menu1:setTitle('Wrong Places  '..Apps.version)
     menu1:setAlignment('center')
     
@@ -38,21 +41,21 @@ function CMainMenu:create()
     -- PAGE 2 : new game
         -- TODO : add options capabylities inside the Class buttons
     menu1:addNewPage()
-    menu1:addBtn({caption='Let\'s GO !', name='launchGame', hint='Launch the game', onClick=Actions.launchGame, page=2})
+    menu1:addBtn({caption='Start the game', name='launchGame', hint='Launch the game', onClick=Actions.launchGame, page=2})
 
-    menu1:addBtn({caption='Mode : Normal', name='mode', hint='Game modes', onClick=Actions.wip, page=2})
+    menu1:addBtn({caption='Mode  Normal', name='mode', hint='Game modes', onClick=Actions.wip, page=2})
     menu1.pages[2].buttons.mode.options = {'Normal', 'Alchemist'}
-    menu1.pages[2].buttons.mode.prefix = 'Mode : '
+    menu1.pages[2].buttons.mode.prefix = 'Mode  '
     menu1.pages[2].buttons.mode.optSelected = 1
     
-    menu1:addBtn({caption='Difficulty : Normal', name='diff', hint='Games difficulties (5)', onClick=Actions.nextOption, page=2})
+    menu1:addBtn({caption='Difficulty  Normal', name='diff', hint='Games difficulties (5)', onClick=Actions.nextOption, page=2})
     menu1.pages[2].buttons.diff.options = {'Trivial', 'Easy', 'Normal', 'Tricky', 'Impossible'}
-    menu1.pages[2].buttons.diff.prefix = 'Difficulty : '
+    menu1.pages[2].buttons.diff.prefix = 'Difficulty  '
     menu1.pages[2].buttons.diff.optSelected = 3
     
-    menu1:addBtn({caption='Size : Small', name='size', hint='Game sizes (3)', onClick=Actions.nextOption, page=2})
+    menu1:addBtn({caption='Size  Small', name='size', hint='Game sizes (3)', onClick=Actions.nextOption, page=2})
     menu1.pages[2].buttons.size.options = {'Small', 'Normal', 'Big'}
-    menu1.pages[2].buttons.size.prefix = 'Size : '
+    menu1.pages[2].buttons.size.prefix = 'Size  '
     menu1.pages[2].buttons.size.optSelected = 1
     
     menu1:addBtn({caption='Back', name='goBack', hint='Retour au menu principal', onClick=Actions.goPage1, page=2})
@@ -60,17 +63,17 @@ function CMainMenu:create()
     -- PAGE 3 : options
     menu1:addNewPage()
     
-    menu1:addBtn({caption='Music Volume : 50', name='music', hint='Music volume controler', onRollDown=Actions.adjustVolumeDown, onRollUp=Actions.adjustVolumeUp, page=3})
-    menu1.pages[3].buttons.music.prefix = 'Music Volume : '
+    menu1:addBtn({caption='Music Volume  50', name='music', hint='Music volume controler', onRollDown=Actions.adjustVolumeDown, onRollUp=Actions.adjustVolumeUp, page=3})
+    menu1.pages[3].buttons.music.prefix = 'Music Volume  '
     menu1.pages[3].buttons.music.optSelected = 50
     
-    menu1:addBtn({caption='Effects Volume : 50', name='effects', hint='Effects volume controler', onRollDown=Actions.adjustVolumeDown, onRollUp=Actions.adjustVolumeUp, page=3})
-    menu1.pages[3].buttons.effects.prefix = 'Effects Volume : '
+    menu1:addBtn({caption='Effects Volume  50', name='effects', hint='Effects volume controler', onRollDown=Actions.adjustVolumeDown, onRollUp=Actions.adjustVolumeUp, page=3})
+    menu1.pages[3].buttons.effects.prefix = 'Effects Volume  '
     menu1.pages[3].buttons.effects.optSelected = 50
     
     menu1:addBtn({caption='Back', name='goBack', hint='Retour au menu principal', onClick=Actions.goPage1, page=3})
     
-    -- PAGE 3 : options
+    -- PAGE 4 : credits
     menu1:addNewPage()
     menu1:addBtn({caption='Pako Skyfrog 2013', name='me', hint='That\'s me ^^', page=4})
     menu1:addBtn({caption='Coded in Lua', name='lua', page=4})
@@ -88,6 +91,25 @@ end
 
 ------------------------
 --  Callbacks
+function CMainMenu:load()
+    --------------------
+    --  once loader
+    CMenu.load(self)
+    
+    self.titleFont = love.graphics.newFont('gfx/title.ttf', 100)
+    self.menuFont  = love.graphics.newFont('gfx/menu2.ttf', 36)
+    
+    for i = 1, 3 do
+        for name, btn in pairs(self.pages[i].buttons) do
+            btn.selfFont = self.menuFont
+            btn:setCaption(btn.caption) -- actualize dimensions
+        end
+    end
+    
+    -- actualize positions
+    self:setAlignment('center')
+    print('main menu loaded')
+end
 
 
 ------------------------

@@ -57,6 +57,8 @@ function CBackground:load()
     self:newCloud(true)
     self:newCloud(true)
     self:newCloud(true)
+    
+    print('mmBG loaded')
 end
 
 function CBackground:draw()

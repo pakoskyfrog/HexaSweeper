@@ -14,7 +14,7 @@
 ------------------------
 --  Init
 CPauseMenu = {}
-CPauseMenu.__index = CPauseMenu
+setmetatable(CPauseMenu, CMenu)
 
 ------------------------
 --  Properties
@@ -28,6 +28,9 @@ function CPauseMenu:create()
     local colr = {200,200,200}
 
     local menu1 = CMenu.create()
+    setmetatable(menu1, self)
+    self.__index = self
+    
     menu1:setWindowed()
     menu1:setAlignment('center')
     

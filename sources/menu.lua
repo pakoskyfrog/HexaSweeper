@@ -62,8 +62,8 @@ function CMenu:draw()
     
     -- title
     if not self.windowed then
-        love.graphics.setFont(Apps.fonts.huge)
-        love.graphics.setColor(Apps.colors.main_Title or {100,255,100})
+        love.graphics.setFont(self.titleFont or Apps.fonts.huge)
+        love.graphics.setColor(self.titleColor or Apps.colors.main_Title or {100,255,100})
         love.graphics.print(self.title, 20, 20)
     end
     
