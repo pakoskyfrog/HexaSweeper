@@ -59,6 +59,7 @@ end
 
 function CHexaGrid:load()
     
+    print "Grid loaded"
 end
 
 function CHexaGrid:draw()
@@ -224,9 +225,9 @@ function CHexaGrid:fillGrid(diff)
                 u = math.random(2*n)-n
                 v = math.random(2*n)-n
             until math.abs(u+v) <= n
-            if Apps.debug then print('bomb placed at '..u..':'..v) end
             tile = self.tileCollection[u..':'..v]
         until tile.content == 'void'
+        
         tile.content = 'bomb'
     end
     

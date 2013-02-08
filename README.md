@@ -41,6 +41,8 @@ Here is the list of steps i will follow :
     - Tweaked the difficulty a bit
     - Alpha 0.1 released !
     - Main menu : changed fonts, realignments, ...
+    - HUD : Add some images, a font
+    
 
 ## 4/ Credits
 

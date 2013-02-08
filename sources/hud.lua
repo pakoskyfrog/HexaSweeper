@@ -38,14 +38,14 @@ function CHud:create(proto)
     
     Hud.time = 0
     
-    Hud.menuBtn = CButton:create(Hud, 'Menu', 10, 10)
-    Hud.menuBtn.hasBG = true
+    Hud.menuBtn = CButton:create(Hud, 'Menu', 20, 8)
+    -- Hud.menuBtn.hasBG = true
     Hud.menuBtn.onClick = function() 
         Apps.state.state = CPauseMenu:create()
     end
     Hud.menuBtn.colors.text = {200,200,200}
     Hud.menuBtn.colors.over = Apps.colors.white
-    Hud.menuBtn.colors.bg   = {  0,  0,  0,200}
+    -- Hud.menuBtn.colors.bg   = {  0,  0,  0,200}
     
     return Hud
 end
@@ -55,7 +55,12 @@ end
 --  Callbacks
 
 function CHud:load()
+    self.imgs = {}
+    self.imgs.btn1  = love.graphics.newImage("gfx/hudBtn1.png")
+    self.imgs.bomb  = love.graphics.newImage("gfx/hudBomb.png")
+    self.imgs.clock = love.graphics.newImage("gfx/hudClock.png")
     
+    print("HUD loaded")
 end
 
 function CHud:draw()
@@ -73,7 +78,10 @@ function CHud:draw()
         local w,h = Apps.fonts.big:getWidth(t),Apps.fonts.big:getHeight(t)
         lg.rectangle('fill', 790-w,590-h, w,h)
         lg.setColor(Apps.colors.hud_front)
-        lg.print(t, 790-w,590-h)
+        lg.print(t, 790-w, 590-h)
+        
+        lg.setColor(Apps.colors.white)
+        lg.draw(self.imgs.clock, 790-w-64, 595-64)
     end
     
     
@@ -82,13 +90,18 @@ function CHud:draw()
         local s = tostring(self.minesLeft) .. ' / ' .. self.parent.grid.NMines
         lg.setFont(Apps.fonts.big)
         lg.setColor(Apps.colors.msgZone_Bg)
-        local w,h = Apps.fonts.big:getWidth(s),Apps.fonts.big:getHeight(s)
+        local w,h = Apps.fonts.big:getWidth(s), Apps.fonts.big:getHeight(s)
         lg.rectangle('fill', 780-w,10, w,h)
         lg.setColor(Apps.colors.hud_front)
         lg.print(s, 780-w, 10)
+        
+        lg.setColor(Apps.colors.white)
+        lg.draw(self.imgs.bomb, 790-w-64, 0)
     end
     
     -- buttons
+    lg.setColor(Apps.colors.white)
+    love.graphics.draw(self.imgs.btn1, 0, 0)
     self.menuBtn:draw()
 end
 

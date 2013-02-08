@@ -57,6 +57,12 @@ function CGame:load()
     self.imgs.lost    = love.graphics.newImage("gfx/nuke.png")
     self.imgs.won     = love.graphics.newImage("gfx/win.png")
     
+    self.msgFontHuge  = love.graphics.newFont("gfx/menu3.ttf", 72)
+    self.msgFontBig   = love.graphics.newFont("gfx/menu3.ttf", 44)
+    
+    self.hud:load()
+    self.grid:load()
+    
     print('Game loaded')
 end
 
@@ -99,10 +105,11 @@ function CGame:draw()
         love.graphics.draw(self.imgs.won, 400-w/2, 300-h/2, 0, z, z)
         
         love.graphics.setColor(Apps.colors.black)
-        love.graphics.setFont(Apps.fonts.huge)
+        -- love.graphics.setFont(Apps.fonts.huge)
+        love.graphics.setFont(self.msgFontHuge)
         
-        w = Apps.fonts.huge:getWidth('You Won !')
-        h = Apps.fonts.huge:getHeight()
+        w = self.msgFontHuge:getWidth('You Won !')
+        h = self.msgFontHuge:getHeight()
         love.graphics.print('You Won !', 400-w/2, 300-h/2)
         
     elseif self.hasLost then
@@ -116,10 +123,10 @@ function CGame:draw()
         love.graphics.draw(self.imgs.lost, 250-w/2, 300-h/2, 0, z, z)
         
         love.graphics.setColor(Apps.colors.black)
-        love.graphics.setFont(Apps.fonts.big)
+        love.graphics.setFont(self.msgFontBig)
         
-        w = Apps.fonts.big:getWidth('You Lost ...')
-        h = Apps.fonts.big:getHeight()
+        w = self.msgFontBig:getWidth('You Lost ...')
+        h = self.msgFontBig:getHeight()
         love.graphics.print('You Lost ...', 500-w/2, 300-h/2)
     end
 end
