@@ -42,6 +42,7 @@ Here is the list of steps i will follow :
     - Alpha 0.1 released !
     - Main menu : changed fonts, realignments, ...
     - HUD : Add some images, a font
+    - HighScore system operationnal, "just" need to add an event at the end of the game with an edit zone to add the player name
     
 
 ## 4/ Credits

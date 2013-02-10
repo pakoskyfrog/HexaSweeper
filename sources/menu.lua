@@ -141,7 +141,8 @@ function CMenu:setAlignment(ali)
     -- realign btns
     local xpos
     local w, h = love.graphics.getWidth(), love.graphics.getHeight()
-    for p = 1, #self.pages do        
+    for p = 1, #self.pages do
+        if not self.pages[p].setAlignment then
         for n,b in pairs(self.pages[p].buttons) do
             local tx = b.width
             if self.align == 'left' then
@@ -161,6 +162,10 @@ function CMenu:setAlignment(ali)
                 end
             end
             b.pos.x = xpos
+        end
+        else
+            -- the page has its own alignment func
+            self.pages[p].setAlignment(ali)
         end
     end
 end

@@ -29,6 +29,7 @@ function CGame:create(proto)
     if not proto then proto = {} end
     
     -- options
+    Game.options = {diff=proto.diff, size=proto.size, mode=proto.mode}
     
     -- grid
     Game.grid = CHexaGrid:create({sender=Game, diff=proto.diff, size=proto.size})
@@ -278,6 +279,9 @@ function CGame:won()
     --------------------
     --  call this when the player wins
     self.hasWon = true
+    
+    -- TODO : Add a way to enter a name if there is a highscore
+    highScores.add('Player', math.floor(self.hud.time), self.options.diff, self.options.size, self.options.mode)
 end
 
 function CGame:winTest()

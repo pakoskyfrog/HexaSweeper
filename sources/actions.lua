@@ -57,6 +57,50 @@ function Actions:goPage4()
     self.parent:setCurrentPage(4)
 end
 
+function Actions:goPage5()
+    --------------------
+    --  Makes the menu goes to the high score page
+    -- self is the button clicked
+    
+    Actions.actualizeHS()
+    self.parent:setCurrentPage(5)
+end
+
+function Actions.actualizeHS()
+    --------------------
+    --  will change the caption of the 10 buttons according to the HS
+    
+    local page = Apps.state.pages[5]
+    print(highScores.getPageOptions(page))
+    highScores.setPageButtons(page, highScores.getHS(highScores.getPageOptions(page)))
+end
+
+function Actions:selectMe()
+    --------------------
+    --  this will handle the selection of the buttons of the HS page
+    -- btn.framed is used to have the selected parameter
+    
+    -- local up = {d='diffs', s='sizes', m='modes'}
+    
+    -- detect the line
+    local n = self.name:sub(-1) -- n is d s or m
+    -- local line = up[n]
+    
+    -- reinit the line
+    for name, btn in pairs(self.parent.pages[5].buttons) do
+        if btn.name:sub(-1) == n then
+            btn.framed = false
+        end
+    end
+    
+    -- select me
+    self.framed = true
+    
+    -- actualize the list
+    Actions.actualizeHS()
+end
+
+
 function Actions:nextOption()
     --------------------
     --  Will change button status to the next option

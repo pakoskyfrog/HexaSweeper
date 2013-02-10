@@ -34,17 +34,17 @@ function CMainMenu:create()
     -- PAGE 1 : main redirection page
     menu1:addBtn({caption='New', name='new', hint='Launch the settings for a new game', onClick=Actions.goPage2}) --, onClick=func , page=2
     menu1:addBtn({caption='Options', name='options', hint='Music and sounds options', onClick=Actions.goPage3})
-    menu1:addBtn({caption='High scores', name='highscore', hint='Displays the best scores !', onClick=Actions.wip})
+    menu1:addBtn({caption='High scores', name='highscore', hint='Displays the best scores !', onClick=Actions.goPage5})
     menu1:addBtn({caption='Achievements', name='achiev', hint='Displays what you have amazingly done !', onClick=Actions.wip})
     menu1:addBtn({caption='Credits', name='credits', hint='Shows the credits list', onClick=Actions.goPage4})
     
     -- PAGE 2 : new game
-        -- TODO : add options capabylities inside the Class buttons
+        -- TODO : add options capabylities inside the Class button
     menu1:addNewPage()
     menu1:addBtn({caption='Start the game', name='launchGame', hint='Launch the game', onClick=Actions.launchGame, page=2})
 
     menu1:addBtn({caption='Mode  Normal', name='mode', hint='Game modes', onClick=Actions.wip, page=2})
-    menu1.pages[2].buttons.mode.options = {'Normal', 'Alchemist'}
+    menu1.pages[2].buttons.mode.options = {'Classic', 'Alchemist'}
     menu1.pages[2].buttons.mode.prefix = 'Mode  '
     menu1.pages[2].buttons.mode.optSelected = 1
     
@@ -84,6 +84,8 @@ function CMainMenu:create()
     
     menu1:addBtn({caption='Back', name='goBack', hint='Retour au menu principal', onClick=Actions.goPage1, page=4})
 
+    -- PAGE 5 : high Scores
+    menu1.pages[5] = highScores.generateMenuPage(menu1)
     
     return menu1
 end

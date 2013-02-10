@@ -5,7 +5,7 @@
 --  INIT
 Apps = {}
 Apps.debug = true
-Apps.version = 0.1
+Apps.version = 0.2
 Apps.type = 'Apps'
 
 Apps.ID = 0

@@ -19,6 +19,7 @@ require "sources/gameBG"
 require "sources/pausemenu"
 require "sources/hexatile"
 require "sources/hexagrid"
+require "sources/highScoresFS"
 
 ------------------------
 --  INIT
