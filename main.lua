@@ -9,6 +9,7 @@ math.randomseed(os.time())
 --  Dependencies
 require "sources/apps"
 require "sources/button"
+require "sources/edit"
 require "sources/menu"
 require "sources/actions"
 require "sources/mainmenu"
@@ -20,6 +21,7 @@ require "sources/pausemenu"
 require "sources/hexatile"
 require "sources/hexagrid"
 require "sources/highScoresFS"
+require "sources/hsname"
 
 ------------------------
 --  INIT

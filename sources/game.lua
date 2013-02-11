@@ -130,6 +130,7 @@ function CGame:draw()
         h = self.msgFontBig:getHeight()
         love.graphics.print('You Lost ...', 500-w/2, 300-h/2)
     end
+    
 end
 
 function CGame:update(dt)
@@ -156,6 +157,7 @@ function CGame:mousepressed(x, y, btn)
         if btn == 'wu' then self.grid:zoomOut() end
         if btn == 'wd' then self.grid:zoomIn() end
     end
+    
 end
 
 function CGame:keypressed(key)
@@ -280,8 +282,12 @@ function CGame:won()
     --  call this when the player wins
     self.hasWon = true
     
-    -- TODO : Add a way to enter a name if there is a highscore
-    highScores.add('Player', math.floor(self.hud.time), self.options.diff, self.options.size, self.options.mode)
+    local hsl = highScores.getHS(self.options.diff, self.options.size, self.options.mode, true)
+    local maxScore = hsl[#hsl][2]
+    if Apps.debug then print('maxscore was '..maxScore..'. You get '..tostring(math.floor(self.hud.time))) end
+    if maxScore > math.floor(self.hud.time) or #hsl < 10 then
+        self.state = CHSName:create(self)
+    end
 end
 
 function CGame:winTest()

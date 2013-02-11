@@ -36,7 +36,7 @@ function CPauseMenu:create()
     
     menu1:addBtn({caption='Resume the game', name='resume', onClick=Actions.nullUnderState})
     menu1:addBtn({caption='Show the solution', name='soluce', onClick=Actions.wip})
-    menu1:addBtn({caption='Restart new', hint='Will rebuild a new game with same settings as previous one' , name='new', onClick=Actions.wip})
+    menu1:addBtn({caption='Restart new', hint='Will rebuild a new game with same settings as previous one' , name='new', onClick=Actions.restartGame})
     menu1:addBtn({caption='Back to main menu', name='gomenu', onClick=Actions.activateMainMenu})
     
     -- changing colors

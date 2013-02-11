@@ -140,7 +140,7 @@ local function secToString(sec)
 end
 
 -- TODO : make an iterator
-function highScores.getHS(diff, size, mode)
+function highScores.getHS(diff, size, mode, noConvert)
     --------------------
     --  will extract and format the high scores of given mode, size and difficulty
     
@@ -166,7 +166,11 @@ function highScores.getHS(diff, size, mode)
     local sub = hsl[mode][diff][size]
     
     for i = 1, #sub do
-        out[i] = {sub[i][1], secToString(sub[i][2])}
+        if noConvert then
+            out[i] = {sub[i][1], math.floor(sub[i][2])}
+        else
+            out[i] = {sub[i][1], secToString(math.floor(sub[i][2]))}
+        end
     end
     
     return out

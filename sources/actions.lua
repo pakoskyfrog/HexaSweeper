@@ -80,11 +80,8 @@ function Actions:selectMe()
     --  this will handle the selection of the buttons of the HS page
     -- btn.framed is used to have the selected parameter
     
-    -- local up = {d='diffs', s='sizes', m='modes'}
-    
     -- detect the line
     local n = self.name:sub(-1) -- n is d s or m
-    -- local line = up[n]
     
     -- reinit the line
     for name, btn in pairs(self.parent.pages[5].buttons) do
@@ -136,8 +133,28 @@ function Actions:launchGame()
     Apps.state = CGame:create(options)
 end
 
+function Actions:restartGame()
+    --------------------
+    --  re-launch a game with previous options
+    
+    Apps.state = CGame:create(Apps.state.options)
+end
+
+
 function Actions:nullUnderState()
     --------------------
     --  set the underState to nil
     Apps.state.state = nil
+end
+
+function Actions:addPlayerName()
+    --------------------
+    --  ... in the high scores
+    
+    local name = self.parent.edit:getText()
+    if name == '' then name = 'Player' end
+    
+    highScores.add(name, math.floor(Apps.state.hud.time), Apps.state.options.diff, Apps.state.options.size, Apps.state.options.mode)
+
+    Actions.nullUnderState()
 end

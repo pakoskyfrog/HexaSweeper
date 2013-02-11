@@ -44,7 +44,7 @@ function CHexaGrid:create(proto)
     proto.diff = proto.diff or 'Normal'
     
     HexaGrid.ID = Apps:getNextID()
-    
+    HexaGrid.camera.orig = {0,0} -- screen center
     
     CHexaGrid.generateGrid(HexaGrid)
     CHexaGrid.fillGrid(HexaGrid, proto.diff)
