@@ -39,10 +39,12 @@ function CPauseMenu:create()
     menu1:addBtn({caption='Restart new', hint='Will rebuild a new game with same settings as previous one' , name='new', onClick=Actions.restartGame})
     menu1:addBtn({caption='Back to main menu', name='gomenu', onClick=Actions.activateMainMenu})
     
-    -- changing colors
+    -- changing colors & font
+    local f = love.graphics.newFont("gfx/menu3.ttf", 32)
     for name, btn in pairs(menu1.pages[1].buttons) do
         btn.colors.over = bcol
         btn.colors.text = colr
+        btn.selfFont = f
     end
     
     return menu1

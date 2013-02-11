@@ -39,13 +39,14 @@ function CHud:create(proto)
     Hud.time = 0
     
     Hud.menuBtn = CButton:create(Hud, 'Menu', 20, 8)
-    -- Hud.menuBtn.hasBG = true
     Hud.menuBtn.onClick = function() 
         Apps.state.state = CPauseMenu:create()
     end
     Hud.menuBtn.colors.text = {200,200,200}
     Hud.menuBtn.colors.over = Apps.colors.white
-    -- Hud.menuBtn.colors.bg   = {  0,  0,  0,200}
+    Hud.menuBtn.selfFont    = love.graphics.newFont("gfx/menu3.ttf", 32)
+    
+    Hud.digitFont = love.graphics.newFont("gfx/menu3.ttf", 44)
     
     return Hud
 end
@@ -71,11 +72,12 @@ function CHud:draw()
         local m = math.floor(self.time/60)
         local s = math.floor(self.time -m*60)
         if s < 10 then s = '0'..s end
-        local t = m .. ':' .. s
+        local t = ' ' .. m .. ':' .. s .. ' '
         
-        lg.setFont(Apps.fonts.big)
+        -- lg.setFont(Apps.fonts.big)
+        lg.setFont(self.digitFont)
         lg.setColor(Apps.colors.msgZone_Bg)
-        local w,h = Apps.fonts.big:getWidth(t),Apps.fonts.big:getHeight(t)
+        local w,h = self.digitFont:getWidth(t),self.digitFont:getHeight(t)
         lg.rectangle('fill', 790-w,590-h, w,h)
         lg.setColor(Apps.colors.hud_front)
         lg.print(t, 790-w, 590-h)
@@ -87,10 +89,10 @@ function CHud:draw()
     
     -- mines left
     do
-        local s = tostring(self.minesLeft) .. ' / ' .. self.parent.grid.NMines
-        lg.setFont(Apps.fonts.big)
+        local s = ' '..tostring(self.minesLeft) .. ' / ' .. self.parent.grid.NMines..' '
+        lg.setFont(self.digitFont)
         lg.setColor(Apps.colors.msgZone_Bg)
-        local w,h = Apps.fonts.big:getWidth(s), Apps.fonts.big:getHeight(s)
+        local w,h = self.digitFont:getWidth(s), self.digitFont:getHeight(s)
         lg.rectangle('fill', 780-w,10, w,h)
         lg.setColor(Apps.colors.hud_front)
         lg.print(s, 780-w, 10)

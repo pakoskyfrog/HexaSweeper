@@ -24,6 +24,7 @@ CHexaTile.guess   = 'none' -- it's what the user supposes the tile is, cycled by
 CHexaTile.guesses = {'none','bomb','interro'}
 CHexaTile.radius  = 20
 CHexaTile.discovered = false
+CHexaTile.font    = love.graphics.newFont("gfx/menu3.ttf", 26)
 
 ------------------------
 --  Constructor
@@ -66,13 +67,9 @@ function CHexaTile:draw()
         -- content = any, trapped discovered
         -- content = any, interrogation
     
-    --===========================
-    --  == dev temp code lines ==
-    
     love.graphics.setLineWidth(2)
     
     if self.discovered then
-        -- just draw a circle
         lg.setColor(Apps.colors.gray)
         if self.content == 'bomb' then lg.setColor(Apps.colors.red) end
         lg.circle('fill', self.pos.x, self.pos.y, self.radius * z, 6)
@@ -81,9 +78,11 @@ function CHexaTile:draw()
         
         local b = self.bombCount or 0
         if self.content == 'void' and b>0 then
-            lg.setFont(Apps.fonts['default'])
+            lg.setFont(self.font)
             lg.setColor(Apps.dangerColors[b])
-            lg.print(tostring(b), self.pos.x -8, self.pos.y -13)
+            local shx = 0
+            if b == 1 then shx = 5 end
+            lg.print(tostring(b), self.pos.x -8 +shx, self.pos.y -13)
         end
     else
         lg.setColor({ 50, 50, 50})
@@ -99,10 +98,8 @@ function CHexaTile:draw()
         end
     end
     
-    
     lg.setColor(Apps.colors.white)
     lg.circle('line', self.pos.x, self.pos.y, self.radius * z, 6)
-    --===========================
 end
 
 function CHexaTile:update(dt)
