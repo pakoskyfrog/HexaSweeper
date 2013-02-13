@@ -25,6 +25,7 @@ CHexaTile.guesses = {'none','bomb','interro'}
 CHexaTile.radius  = 20
 CHexaTile.discovered = false
 CHexaTile.font    = love.graphics.newFont("gfx/menu3.ttf", 26)
+CHexaTile.goodCount = 0
 
 ------------------------
 --  Constructor
@@ -69,38 +70,86 @@ function CHexaTile:draw()
     
     love.graphics.setLineWidth(2)
     
-    if self.discovered then
+    if self.discovered or (Apps.state.hasLost or Apps.state.hasWon) then
         lg.setColor(Apps.colors.gray)
         if self.content == 'bomb' then lg.setColor(Apps.colors.red) end
         lg.circle('fill', self.pos.x, self.pos.y, self.radius * z, 6)
         lg.setColor(Apps.colors.white)
         lg.circle('line', self.pos.x, self.pos.y, self.radius * z, 6)
         
-        local b = self.bombCount or 0
-        if self.content == 'void' and b>0 then
-            lg.setFont(self.font)
-            lg.setColor(Apps.dangerColors[b])
-            local shx = 0
-            if b == 1 then shx = 5 end
-            lg.print(tostring(b), self.pos.x -8 +shx, self.pos.y -13)
-        end
+        self:draw_count()
     else
         lg.setColor({ 50, 50, 50})
         lg.circle('fill', self.pos.x, self.pos.y, self.radius * z, 6)
-        
-        -- guesses :
-        if not (self.guess == 'none') then
-            local pic = self.parent.parent.imgs[self.guess]
-            if pic then
-                lg.setColor(Apps.colors.white)
-                love.graphics.draw(pic, self.pos.x -12*z, self.pos.y -14*z, 0, 0.25*z, 0.25*z)
-            end
-        end
+    end
+    
+    -- guesses :
+    if not (self.guess == 'none') then
+        self:draw_guess(z)
     end
     
     lg.setColor(Apps.colors.white)
     lg.circle('line', self.pos.x, self.pos.y, self.radius * z, 6)
 end
+
+function CHexaTile:draw_count_classic()
+    --------------------
+    --  this will display the number of bombs around
+    local b = self.bombCount or 0
+    if self.content == 'void' and b>0 then
+        lg.setFont(self.font)
+        lg.setColor(Apps.dangerColors[b])
+        local shx = 0
+        if b == 1 then shx = 5 end
+        lg.print(tostring(b), self.pos.x -8 +shx, self.pos.y -13)
+    end
+end
+function CHexaTile:draw_count_alchem()
+    --------------------
+    --  this will display the number of good/bad plants around
+    local b = self.bombCount or 0
+    local g = self.goodCount or 0
+    if self.content == 'void' and (b>0 or g>0) then
+        lg.setFont(self.font)
+        
+        local col
+        if b>0 and g>0 then
+            lg.setColor(Apps.colors.yellow)
+        elseif b>0 then
+            lg.setColor(Apps.colors.red)
+        else
+            lg.setColor(Apps.colors.green)
+        end
+        
+        local shx = 0
+        if (b+g) == 1 then shx = 5 end
+        lg.print(tostring(b+g), self.pos.x -8 +shx, self.pos.y -13)
+    end
+end
+
+function CHexaTile:draw_guess_classic(z)
+    --------------------
+    --  this will display the guesses of the player
+    local pic = self.parent.parent.imgs[self.guess]
+    if pic then
+        lg.setColor(Apps.colors.white)
+        love.graphics.draw(pic, self.pos.x -12*z, self.pos.y -14*z, 0, 0.25*z, 0.25*z)
+    end
+end
+function CHexaTile:draw_guess_alchem(z)
+    --------------------
+    --  this will display the guesses of the player
+    local pic = self.parent.parent.imgs[self.guess]
+    if self.guess == 'bomb' then
+        pic = self.parent.parent.imgs['bad']
+    end
+    
+    if pic then
+        lg.setColor(Apps.colors.white)
+        love.graphics.draw(pic, self.pos.x -11*z, self.pos.y -14*z, 0, 0.26*z, 0.26*z)
+    end
+end
+
 
 function CHexaTile:update(dt)
     
@@ -180,12 +229,47 @@ function CHexaTile:activate() -- = click
     if self.discovered then return true, 'done' end
     if self.content == 'bomb' then
         -- BOOM you died
+        self.discovered = true
+        print('BOOM')
         return false, 'boom'
+    elseif self.content == 'good' then
+        -- find one ! >Alchemist mode<
+        Apps.state.hud.goodsFound = Apps.state.hud.goodsFound + 1
+        
+        -- update self and neighbors
+        self.content = 'void'
+        self.discovered = true
+        
+        local vois = self:getVois()
+        for i = 1, 6 do
+            local tile = self.parent.tileCollection[vois[i][1]..":"..vois[i][2]]
+            if tile then
+                tile.goodCount = tile.goodCount - 1
+            end
+        end
+        for i = 1, 6 do
+            local tile = self.parent.tileCollection[vois[i][1]..":"..vois[i][2]]
+            if tile then
+                -- empty tile : has to done after actualizing the count
+                if (tile.goodCount + tile.bombCount == 0) and (tile.content == 'void') and (tile.discovered) then
+                    -- print('activate from VOID empty tile gC=' .. tile.goodCount .. ' bC='..tile.bombCount)
+                    tile:activate()
+                end
+                if (self.goodCount + self.bombCount == 0) then
+                    -- print('activate from SELF empty tile gC=' .. self.goodCount .. ' bC='..self.bombCount)
+                    tile:activate()
+                end
+            end
+        end
+        
+        -- TODO triger animation
+        
+        return true, 'good'
     elseif self.content == 'void' then
         self.discovered = true
         
-        -- has neighboors ?
-        if self.bombCount == 0 then
+        -- has neighbors ?
+        if (self.bombCount + self.goodCount == 0) then
             -- chain reaction, nothing arround, you can click arround
             local vois = self:getVois()
             for i = 1, 6 do
@@ -208,10 +292,10 @@ end
 --  DEBUG funcs
 if Apps.debug then
     
-    function CHexaTile:toString()
+    function CHexaTile:__tostring()
         --------------------
         --  command line displays
-        return self.ID .. '=' .. self.Vpos.u..':'..self.Vpos.v .. ' ' .. self.content
+        return self.ID .. ']=' .. self.Vpos.u..':'..self.Vpos.v .. ' /' .. self.content .. '/ d='..tostring(self.discovered)
     end
     
     

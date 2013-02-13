@@ -194,7 +194,7 @@ function CHexaGrid:generateGrid()
     self:updateTilePositions()
 end
 
-function CHexaGrid:fillGrid(diff)
+function CHexaGrid:fillGrid_classic(diff)
     --------------------
     --  This will fill the field with bombs !
     
@@ -231,6 +231,60 @@ function CHexaGrid:fillGrid(diff)
         tile.content = 'bomb'
     end
     
+end
+function CHexaGrid:fillGrid_alchem(diff)
+    --------------------
+    --  This will fill the field with good and bad plants !
+    
+    local prob -- percentage of field covered by mines
+    if diff == 'Trivial' then
+        prob = 5
+    elseif diff == 'Easy' then
+        prob = 10
+    elseif diff == 'Tricky' then
+        prob = 25
+    elseif diff == 'Impossible' then
+        prob = 40
+    else -- 'Normal'
+        prob = 18
+    end
+    
+    local n=self.width/2
+    local nt = (1+6*(n*(n+1)/2))
+    local nbrb = math.floor(prob/100 * nt) -- number of bad plants  = prob * Ntotal
+    local nbrg = math.floor(prob/200 * nt) -- number of good plants = prob/2 * Ntotal
+    
+    self.NMines = nbrb
+    self.NGoods = nbrg
+    self.NTiles = nt
+    
+    for m = 1, nbrb do
+        local tile
+        repeat
+            local u,v
+            repeat
+                u = math.random(2*n)-n
+                v = math.random(2*n)-n
+            until math.abs(u+v) <= n
+            tile = self.tileCollection[u..':'..v]
+        until tile.content == 'void'
+        
+        tile.content = 'bomb' -- bad plant
+    end
+    
+    for m = 1, nbrg do
+        local tile
+        repeat
+            local u,v
+            repeat
+                u = math.random(2*n)-n
+                v = math.random(2*n)-n
+            until math.abs(u+v) <= n
+            tile = self.tileCollection[u..':'..v]
+        until tile.content == 'void'
+        
+        tile.content = 'good' -- good plant
+    end
 end
 
 function CHexaGrid:updateTilePositions()
@@ -273,6 +327,12 @@ function CHexaGrid:getVois(u,v)
 end
 
 function CHexaGrid:trapedVois(u,v)
+    return self:countVois('bomb',u,v)
+end
+function CHexaGrid:goodVois(u,v)
+    return self:countVois('good',u,v)
+end
+function CHexaGrid:countVois(what,u,v)
     --------------------
     --  returns the count of trapped neighboors in the 6 arround
     local vois = self:getVois(u,v)
@@ -280,19 +340,31 @@ function CHexaGrid:trapedVois(u,v)
     for i = 1, 6 do
         local tile = self.tileCollection[vois[i][1]..":"..vois[i][2]]
         if tile then
-            if tile.content == 'bomb' then count = count + 1 end
+            if tile.content == what then count = count + 1 end
         end
     end
     
     return count
 end
 
-function CHexaGrid:annalyseGrid()
+
+function CHexaGrid:annalyseGrid_classic()
     --------------------
     --  this function will calculate the repartition of the bombs and associates the counts to each tile
     
     for coords, tile in pairs(self.tileCollection) do
         tile.bombCount = self:trapedVois(tile.Vpos.u, tile.Vpos.v)
+    end
+end
+function CHexaGrid:annalyseGrid_alchem()
+    --------------------
+    --  this function will calculate the repartition of the bombs and associates the counts to each tile
+    
+    for coords, tile in pairs(self.tileCollection) do
+        tile.bombCount = self:trapedVois(tile.Vpos.u, tile.Vpos.v)
+    end
+    for coords, tile in pairs(self.tileCollection) do
+        tile.goodCount = self:goodVois(tile.Vpos.u, tile.Vpos.v)
     end
 end
 
@@ -305,6 +377,28 @@ function CHexaGrid:zoomOut()
     self:updateTilePositions()
 end
 
+function CHexaGrid.setModes(mode)
+    --------------------
+    --  this will reassign the functions to match the playing mode
+    if mode ~= 'Alchemist' then mode = 'Classic' end
+    
+    if mode == 'Alchemist' then
+        CHexaTile.draw_count = CHexaTile.draw_count_alchem
+        CHexaTile.draw_guess = CHexaTile.draw_guess_alchem
+        
+        CHexaGrid.annalyseGrid = CHexaGrid.annalyseGrid_alchem
+        CHexaGrid.fillGrid     = CHexaGrid.fillGrid_alchem
+    end
+    
+    if mode == 'Classic' then
+        CHexaTile.draw_count = CHexaTile.draw_count_classic
+        CHexaTile.draw_guess = CHexaTile.draw_guess_classic
+        
+        CHexaGrid.annalyseGrid = CHexaGrid.annalyseGrid_classic
+        CHexaGrid.fillGrid     = CHexaGrid.fillGrid_classic
+    end
+end
+
 
 ------------------------
 --  DEBUG funcs
@@ -314,7 +408,7 @@ if Apps.debug then
         --------------------
         --  command line displays
         for coords, tile in pairs(self.tileCollection) do
-            print(tile:toString())
+            print(tile)
         end
     end
     

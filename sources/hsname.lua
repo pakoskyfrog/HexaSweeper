@@ -146,14 +146,14 @@ function CHSName:getStarRef()
     local pi = math.pi
     local pi5 = pi*0.2
     local r = 120
-    local rr = 40
+    local rr = 120 * 0.382 -- perfect alining
     local sx = self.pos.x
     local sy = self.pos.y
     
     for i = 0, 5 do
         -- high pike
-        pts[4*i+1] = r  * c(t + i*2*pi5     ) + sx
-        pts[4*i+2] = r  * s(t + i*2*pi5     ) + sy
+            pts[4*i+1] = r  * c(t + i*2*pi5     ) + sx
+            pts[4*i+2] = r  * s(t + i*2*pi5     ) + sy
         
         -- low pike
         if i < 5 then

@@ -31,6 +31,9 @@ function CGame:create(proto)
     -- options
     Game.options = {diff=proto.diff, size=proto.size, mode=proto.mode}
     
+    -- modes
+    CGame.setModes(Game)
+    
     -- grid
     Game.grid = CHexaGrid:create({sender=Game, diff=proto.diff, size=proto.size})
     
@@ -38,6 +41,7 @@ function CGame:create(proto)
     Game.hud = CHud:create({sender=Game})
     
     -- bg
+    
     
     CGame.load(Game)
     return Game
@@ -53,6 +57,9 @@ function CGame:load()
     self.imgs.interro = love.graphics.newImage("gfx/interro.png")
     self.imgs.bomb    = love.graphics.newImage("gfx/bomb.png")
     self.imgs.fde     = love.graphics.newImage("gfx/tsar.jpg")
+    
+    self.imgs.good    = love.graphics.newImage("gfx/good.png")
+    self.imgs.bad     = love.graphics.newImage("gfx/bad.png")
     
     self.imgs.msg     = love.graphics.newImage("gfx/msg.png")
     self.imgs.lost    = love.graphics.newImage("gfx/nuke.png")
@@ -106,7 +113,6 @@ function CGame:draw()
         love.graphics.draw(self.imgs.won, 400-w/2, 300-h/2, 0, z, z)
         
         love.graphics.setColor(Apps.colors.black)
-        -- love.graphics.setFont(Apps.fonts.huge)
         love.graphics.setFont(self.msgFontHuge)
         
         w = self.msgFontHuge:getWidth('You Won !')
@@ -138,6 +144,9 @@ function CGame:update(dt)
     if not (self.hasWon or self.hasLost) then
         self.grid:update(dt)
     end
+    if not love.graphics.hasFocus() then
+        self.state = CPauseMenu:create()
+    end
 end
 
 function CGame:mousepressed(x, y, btn)
@@ -145,7 +154,6 @@ function CGame:mousepressed(x, y, btn)
     if not self.hud:mousepressed(x, y, btn) then
         if not (self.hasWon or self.hasLost) then
             local u,v = self:screenTouv(x,y)
-            -- print(btn,' : x,y =',x,y,' : u,v =',u,v)
             self.grid:mousepressed(u, v, btn)
             if self:winTest() then
                 self:won()
@@ -178,6 +186,11 @@ function CGame:keypressed(key)
         end
     end
     
+    -- debug
+    if Apps.debug then
+        local u,v = self:screenTouv(love.mouse.getX(), love.mouse.getY())
+        print(self.grid.tileCollection[u..":"..v])
+    end
 end
 
 function CGame:mousereleased(x, y, btn)
@@ -290,7 +303,7 @@ function CGame:won()
     end
 end
 
-function CGame:winTest()
+function CGame:winTest_classic()
     --------------------
     --  Scan the grid to detect if the player discovered all the safe tiles
     local test = true
@@ -304,7 +317,33 @@ function CGame:winTest()
     
     return test
 end
+function CGame:winTest_alchem()
+    --------------------
+    --  Scan the grid to detect if the player discovered all good plants
+    local test = false
+    
+    for coords, tile in pairs(self.grid.tileCollection) do
+        
+        test = test or (tile.content == 'good')
+        -- one good left is enough
+        if test then break end
+    end
+    
+    return not test
+end
 
+function CGame:setModes()
+    --------------------
+    --  this will reatribute functions depending on which you're playing
+    if self.options.mode == 'Alchemist' then
+        CGame.winTest = CGame.winTest_alchem
+    else
+        CGame.winTest = CGame.winTest_classic
+    end
+    
+    CHud.setModes(self.options.mode)
+    CHexaGrid.setModes(self.options.mode)
+end
 
 
 

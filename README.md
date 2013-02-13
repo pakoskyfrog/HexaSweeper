@@ -44,6 +44,8 @@ Here is the list of steps i will follow :
     - HUD : Add some images, a font
     - HighScore system operationnal, "just" need to add an event at the end of the game with an edit zone to add the player name
     - The player can now enter his name when he gets a high score
+    - Alpha 0.2 released !
+    - Alchemist mode playable
     
 
 ## 4/ Credits

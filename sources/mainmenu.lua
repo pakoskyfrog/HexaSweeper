@@ -43,7 +43,7 @@ function CMainMenu:create()
     menu1:addNewPage()
     menu1:addBtn({caption='Start the game', name='launchGame', hint='Launch the game', onClick=Actions.launchGame, page=2})
 
-    menu1:addBtn({caption='Mode  Normal', name='mode', hint='Game modes', onClick=Actions.wip, page=2})
+    menu1:addBtn({caption='Mode  Classic', name='mode', hint='Game modes', onClick=Actions.nextOption, page=2})
     menu1.pages[2].buttons.mode.options = {'Classic', 'Alchemist'}
     menu1.pages[2].buttons.mode.prefix = 'Mode  '
     menu1.pages[2].buttons.mode.optSelected = 1
