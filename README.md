@@ -48,6 +48,8 @@ Here is the list of steps i will follow :
     - Alchemist mode playable
     - Change some graphics, add animation when good plant is found
     - Alpha 0.3 released
+    - Can't die anymore at first click
+    
 
 ## 4/ Credits
 

@@ -30,7 +30,7 @@ function CGame:create(proto)
     Game.anims = {}
     
     -- options
-    Game.options = {diff=proto.diff, size=proto.size, mode=proto.mode}
+    Game.options = {diff=proto.diff or 'Normal', size=proto.size or 'Small', mode=proto.mode or 'Classic'}
     
     CGame.load(Game)
     -- modes

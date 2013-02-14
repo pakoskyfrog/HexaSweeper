@@ -23,7 +23,8 @@ CHexaGrid.type = "CHexaGrid"
 CHexaGrid.zoomFactor = 1
 CHexaGrid.camera = {}
 CHexaGrid.camera.orig = {0,0} -- screen center
-
+CHexaGrid.NMines = 0
+CHexaGrid.NGoods = 0
 
 ------------------------
 --  Constructor
@@ -41,14 +42,15 @@ function CHexaGrid:create(proto)
     elseif proto.size == 'Big' then HexaGrid.width = 30
     end
     
-    proto.diff = proto.diff or 'Normal'
+    -- proto.diff = proto.diff or 'Normal'
     
     HexaGrid.ID = Apps:getNextID()
     HexaGrid.camera.orig = {0,0} -- screen center
     
     CHexaGrid.generateGrid(HexaGrid)
-    CHexaGrid.fillGrid(HexaGrid, proto.diff)
-    CHexaGrid.annalyseGrid(HexaGrid)
+    CHexaGrid.initialized = false
+    -- CHexaGrid.fillGrid(HexaGrid, proto.diff)
+    -- CHexaGrid.annalyseGrid(HexaGrid)
     
     return HexaGrid
 end
@@ -90,6 +92,10 @@ function CHexaGrid:update(dt)
 end
 
 function CHexaGrid:mousepressed(u, v, btn)
+    if not self.initialized then
+        self:initialize(u,v)
+    end
+
     local tile = self.tileCollection[u..":"..v]
     if tile == nil then return end
     
@@ -163,6 +169,15 @@ function CHexaGrid:getType()
     return self.type
 end
 
+function CHexaGrid:initialize(iu,iv)
+    --------------------
+    --  will init the grid with no bomb at init u,v
+    self:fillGrid(self.parent.options.diff, iu,iv)
+    self:annalyseGrid()
+    self.initialized = true
+end
+
+
 function CHexaGrid:generateGrid()
     --------------------
     --  will generate the hexagonal game arena
@@ -194,7 +209,14 @@ function CHexaGrid:generateGrid()
     self:updateTilePositions()
 end
 
-function CHexaGrid:fillGrid_classic(diff)
+local function blanck(tile)
+    --------------------
+    --  will avoid the 1st click and die
+    print('Blancking...')
+    tile.content = 'void'
+    tile.parent.NMines = tile.parent.NMines - 1
+end
+function CHexaGrid:fillGrid_classic(diff, iu,iv)
     --------------------
     --  This will fill the field with bombs !
     
@@ -217,8 +239,8 @@ function CHexaGrid:fillGrid_classic(diff)
     self.NMines = nbr
     self.NTiles = nt
     
+    local tile
     for m = 1, nbr do
-        local tile
         repeat
             local u,v
             repeat
@@ -231,8 +253,10 @@ function CHexaGrid:fillGrid_classic(diff)
         tile.content = 'bomb'
     end
     
+    tile = self.tileCollection[iu..':'..iv]
+    if tile.content == 'bomb' then blanck(tile) end
 end
-function CHexaGrid:fillGrid_alchem(diff)
+function CHexaGrid:fillGrid_alchem(diff, iu,iv)
     --------------------
     --  This will fill the field with good and bad plants !
     
@@ -258,8 +282,8 @@ function CHexaGrid:fillGrid_alchem(diff)
     self.NGoods = nbrg
     self.NTiles = nt
     
+    local tile
     for m = 1, nbrb do
-        local tile
         repeat
             local u,v
             repeat
@@ -271,6 +295,9 @@ function CHexaGrid:fillGrid_alchem(diff)
         
         tile.content = 'bomb' -- bad plant
     end
+    
+    tile = self.tileCollection[iu..':'..iv]
+    if tile.content == 'bomb' then blanck(tile) end
     
     for m = 1, nbrg do
         local tile
