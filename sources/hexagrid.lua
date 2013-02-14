@@ -174,6 +174,7 @@ function CHexaGrid:initialize(iu,iv)
     --  will init the grid with no bomb at init u,v
     self:fillGrid(self.parent.options.diff, iu,iv)
     self:annalyseGrid()
+    self.parent.hud.minesLeft = self.NMines
     self.initialized = true
 end
 

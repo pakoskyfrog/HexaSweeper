@@ -226,6 +226,7 @@ end
 function CHexaTile:activate() -- = click
     --------------------
     --  Activation of the tile, determined by its status
+    if self.guess ~= 'none' then return true, 'flagged' end
     if self.discovered then return true, 'done' end
     if self.content == 'bomb' then
         -- BOOM you died

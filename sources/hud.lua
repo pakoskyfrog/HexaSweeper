@@ -33,7 +33,7 @@ function CHud:create(proto)
     Hud.parent = proto.sender or proto.parent or Apps.state or nil
     
     if Hud.parent then
-        Hud.minesLeft = Hud.parent.grid.NMines
+        -- Hud.minesLeft = Hud.parent.grid.NMines
         Hud.goodsFound = 0
     end
     

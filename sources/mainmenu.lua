@@ -113,6 +113,12 @@ function CMainMenu:load()
     print('main menu loaded')
 end
 
+function CMainMenu:keypressed(key)
+    if key == 'escape' then
+        self:setCurrentPage(1)
+    end
+end
+
 
 ------------------------
 --  Static functions
