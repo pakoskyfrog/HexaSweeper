@@ -57,13 +57,19 @@ function highScores.save()
     
     local out = 'local hsl = {}\n'
 
+    local function ten(n)
+        --------------------
+        --  will max out to 10
+        return math.min(10,n)
+    end
+    
     for modes, md in pairs(hsl) do
         out = out .. 'hsl.'..modes..' = {}\n'
         for diffs, d in pairs(md) do
             out = out .. 'hsl.'..modes..'.'..diffs..' = {}\n'
             for size, s in pairs(d) do
                 out = out .. 'hsl.'..modes..'.'..diffs..'.'..size..' = {\n'
-                for n = 1, #s do
+                for n = 1, ten(#s) do
                     out = out .. '  {\''..s[n][1]..'\', '..s[n][2]..'},\n'
                 end
                 out = out .. '}\n'
@@ -119,7 +125,7 @@ function highScores.cutBestHS()
                     for n = 1,  10 do
                         tmp[n] = s[n]
                     end
-                    s = tmp
+                    d[size] = tmp
                 end
             end
             
