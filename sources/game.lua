@@ -27,10 +27,12 @@ function CGame:create(proto)
     setmetatable(Game, CGame)
     
     if not proto then proto = {} end
+    Game.anims = {}
     
     -- options
     Game.options = {diff=proto.diff, size=proto.size, mode=proto.mode}
     
+    CGame.load(Game)
     -- modes
     CGame.setModes(Game)
     
@@ -43,7 +45,9 @@ function CGame:create(proto)
     -- bg
     
     
-    CGame.load(Game)
+    Game.hud:load()
+    Game.grid:load()
+    
     return Game
 end
 
@@ -59,17 +63,16 @@ function CGame:load()
     self.imgs.fde     = love.graphics.newImage("gfx/tsar.jpg")
     
     self.imgs.good    = love.graphics.newImage("gfx/good.png")
-    self.imgs.bad     = love.graphics.newImage("gfx/bad.png")
+    self.imgs.bad     = love.graphics.newImage("gfx/bad2.png")
     
     self.imgs.msg     = love.graphics.newImage("gfx/msg.png")
-    self.imgs.lost    = love.graphics.newImage("gfx/nuke.png")
+    self.imgs.nuke    = love.graphics.newImage("gfx/nuke.png")
+    self.imgs.rip     = love.graphics.newImage("gfx/rip.png")
     self.imgs.won     = love.graphics.newImage("gfx/win.png")
     
     self.msgFontHuge  = love.graphics.newFont("gfx/menu3.ttf", 72)
     self.msgFontBig   = love.graphics.newFont("gfx/menu3.ttf", 44)
     
-    self.hud:load()
-    self.grid:load()
     
     print('Game loaded')
 end
@@ -99,8 +102,10 @@ function CGame:draw()
         
     end
     
-    -- HUD
-    self.hud:draw()
+    -- anims
+    for index, anim in ipairs(self.anims) do
+        anim:draw()
+    end
     
     if self.hasWon then
         love.graphics.setColor(Apps.colors.white)
@@ -137,6 +142,8 @@ function CGame:draw()
         love.graphics.print('You Lost ...', 500-w/2, 300-h/2)
     end
     
+    -- HUD
+    self.hud:draw()
 end
 
 function CGame:update(dt)
@@ -147,6 +154,21 @@ function CGame:update(dt)
     if not love.graphics.hasFocus() then
         self.state = CPauseMenu:create()
     end
+    
+    do
+        local sup = {}
+        for index, anim in ipairs(self.anims) do
+            if anim:update(dt) then
+                -- anim is done
+                table.insert(sup, index)
+            end
+        end
+        for index, value in ipairs(sup) do
+            table.remove(self.anims, value)
+            -- if Apps.debug then print('good Anim removed '.. value .. ' / ' .. #self.anims) end
+        end
+    end
+    
 end
 
 function CGame:mousepressed(x, y, btn)
@@ -337,14 +359,40 @@ function CGame:setModes()
     --  this will reatribute functions depending on which you're playing
     if self.options.mode == 'Alchemist' then
         CGame.winTest = CGame.winTest_alchem
+        self.imgs.lost = self.imgs.rip
     else
         CGame.winTest = CGame.winTest_classic
+        self.imgs.lost = self.imgs.nuke
     end
     
     CHud.setModes(self.options.mode)
     CHexaGrid.setModes(self.options.mode)
 end
 
+local function animGoodDraw(self)
+    love.graphics.draw(Apps.state.imgs.good, self.pos.x, self.pos.y)
+end
+local function animGoodUpdate(self,dt)
+    -- self.pos.x = self.pos.x + self.speed * self.dir[1] -- doesn't move
+    self.pos.y = self.pos.y + self.speed * self.dir[2]
+    return (self.pos.y < 0)
+end
+function CGame:addAnimGood(proto)
+    --------------------
+    --  will add an animation to the stack when the player find a good plant
+    
+    local anim = {}
+    anim.type = 'good'
+    anim.dir = {0, -1}
+    anim.pos = proto.pos or {x=love.graphics.getWidth()*0.5, y=love.graphics.getHeight()*0.5}
+    anim.speed = 15 -- pxl/s
+    
+    anim.update = animGoodUpdate
+    anim.draw = animGoodDraw
+    
+    table.insert(self.anims, anim)
+    -- if Apps.debug then print('good Anim added '.. #self.anims) end
+end
 
 
 print "CGame loaded"

@@ -63,7 +63,7 @@ function CHud:load()
     self.imgs.clock = love.graphics.newImage("gfx/hudClock.png")
     
     self.imgs.good  = self.parent.imgs.good
-    self.imgs.bad   = self.parent.imgs.bad
+    self.imgs.bad   = love.graphics.newImage("gfx/bad.png")
     
     print("HUD loaded")
 end

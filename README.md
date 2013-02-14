@@ -46,7 +46,8 @@ Here is the list of steps i will follow :
     - The player can now enter his name when he gets a high score
     - Alpha 0.2 released !
     - Alchemist mode playable
-    
+    - Change some graphics, add animation when good plant is found
+    - Alpha 0.3 released
 
 ## 4/ Credits
 

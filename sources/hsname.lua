@@ -146,7 +146,7 @@ function CHSName:getStarRef()
     local pi = math.pi
     local pi5 = pi*0.2
     local r = 120
-    local rr = 120 * 0.382 -- perfect alining
+    local rr = r * 0.382 -- perfect alining
     local sx = self.pos.x
     local sy = self.pos.y
     

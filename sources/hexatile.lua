@@ -252,17 +252,20 @@ function CHexaTile:activate() -- = click
             if tile then
                 -- empty tile : has to done after actualizing the count
                 if (tile.goodCount + tile.bombCount == 0) and (tile.content == 'void') and (tile.discovered) then
-                    -- print('activate from VOID empty tile gC=' .. tile.goodCount .. ' bC='..tile.bombCount)
+                    -- print(vois[i][1]..":"..vois[i][2]..' activate from VOID empty tile gC=' .. tile.goodCount .. ' bC='..tile.bombCount)
+                    tile.discovered = false
                     tile:activate()
                 end
                 if (self.goodCount + self.bombCount == 0) then
-                    -- print('activate from SELF empty tile gC=' .. self.goodCount .. ' bC='..self.bombCount)
+                    -- print(vois[i][1]..":"..vois[i][2] ..' activate from SELF empty tile gC=' .. self.goodCount .. ' bC='..self.bombCount)
+                    tile.discovered = false
                     tile:activate()
                 end
             end
         end
         
-        -- TODO triger animation
+        -- triger animation
+        Apps.state:addAnimGood({pos={x=self.pos.x, y=self.pos.y}})
         
         return true, 'good'
     elseif self.content == 'void' then
@@ -275,6 +278,8 @@ function CHexaTile:activate() -- = click
             for i = 1, 6 do
                 local tile = self.parent.tileCollection[vois[i][1]..":"..vois[i][2]]
                 if tile then
+                    -- print(vois[i][1]..":"..vois[i][2] .. ' activate from VOID gC=' .. self.goodCount .. ' bC='..self.bombCount)
+                    -- tile.discovered = false
                     tile:activate()
                 end
             end
