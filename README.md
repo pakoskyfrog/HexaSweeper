@@ -49,7 +49,8 @@ Here is the list of steps i will follow :
     - Change some graphics, add animation when good plant is found
     - Alpha 0.3 released
     - Can't die anymore at first click
-    
+    - Help done
+    - Few hidden bugs fixed
 
 ## 4/ Credits
 

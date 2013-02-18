@@ -158,3 +158,23 @@ function Actions:addPlayerName()
 
     Actions.nullUnderState()
 end
+
+function Actions:showHelp()
+    -- redirection
+    if Apps.state.options.mode == 'Classic' then
+        Actions.showHelpClassic()
+    elseif Apps.state.options.mode == 'Alchemist' then
+        Actions.showHelpAlchemist()
+    end
+end
+function Actions.showHelpClassic()
+    --------------------
+    --  Will show usefull tips as an understate
+    Apps.state.state = CHelpShow:create('classic',3) -- 3 pages on classic mode
+end
+function Actions.showHelpAlchemist()
+    --------------------
+    --  Will show usefull tips as an understate
+    Apps.state.state = CHelpShow:create('alchemist',3)
+end
+

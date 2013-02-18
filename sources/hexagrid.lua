@@ -255,7 +255,7 @@ function CHexaGrid:fillGrid_classic(diff, iu,iv)
     end
     
     tile = self.tileCollection[iu..':'..iv]
-    if tile.content == 'bomb' then blanck(tile) end
+    if tile ~= nil and tile.content == 'bomb' then blanck(tile) end
 end
 function CHexaGrid:fillGrid_alchem(diff, iu,iv)
     --------------------

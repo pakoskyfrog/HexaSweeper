@@ -81,7 +81,8 @@ Apps.dangerColors = {
     {255,  0,127},
 }
 
-
+Apps.w = love.graphics.getWidth()
+Apps.h = love.graphics.getHeight()
 
 ------------------------
 --  Apps functions

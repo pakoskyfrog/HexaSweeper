@@ -22,6 +22,7 @@ require "sources/hexatile"
 require "sources/hexagrid"
 require "sources/highScoresFS"
 require "sources/hsname"
+require "sources/helpShow"
 
 ------------------------
 --  INIT
